@@ -2,21 +2,37 @@ package com.koustuvsinha.benchmarker.views;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
 import com.koustuvsinha.benchmarker.R;
+import com.koustuvsinha.benchmarker.adaptors.DbListAdaptor;
 
 import io.fabric.sdk.android.Fabric;
 
 
 public class BaseActivity extends Activity {
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_base);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.listview);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new DbListAdaptor();
+        mRecyclerView.setAdapter(mAdapter);
+
+        //TODO: add on touch listener
     }
 
 
