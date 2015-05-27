@@ -19,7 +19,7 @@
             android:id="@+id/dbName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="35dp"
+            android:textSize="25dp"
             android:gravity="center_vertical"
             />
 
