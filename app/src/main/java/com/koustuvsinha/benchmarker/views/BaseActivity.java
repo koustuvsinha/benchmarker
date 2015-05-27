@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.crashlytics.android.Crashlytics;
 import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbListAdaptor;
+import com.melnykov.fab.FloatingActionButton;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -27,6 +28,8 @@ public class BaseActivity extends Activity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.listview);
         mRecyclerView.setHasFixedSize(true);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.attachToRecyclerView(mRecyclerView);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new DbListAdaptor();
