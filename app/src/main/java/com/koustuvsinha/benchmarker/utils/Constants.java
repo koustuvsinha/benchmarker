@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Constants {
 
-    public static ArrayList<DbFactoryModel> DB_LIST = new ArrayList<DbFactoryModel>() {{
+    public final static ArrayList<DbFactoryModel> DB_LIST = new ArrayList<DbFactoryModel>() {{
         add(new DbFactoryModel("Realm","v0.83.3","Realm",true));
         add(new DbFactoryModel("ORM Lite Android","v4.48","ORM Lite",true));
         add(new DbFactoryModel("Sugar ORM","v1.4","Satya Narayan",true));
@@ -18,11 +18,28 @@ public class Constants {
         add(new DbFactoryModel("Android SQLite","v1.0","Android",true));
     }};
 
-    public static int DB_TYPE_REALM = 1;
-    public static int DB_TYPE_ORMLITE = 2;
-    public static int DB_TYPE_SUGARORM = 3;
-    public static int DB_TYPE_GREENDAO = 4;
-    public static int DB_TYPE_ACTIVEANDROID = 5;
-    public static int DB_TYPE_DEFAULT = 6;
+    public final static String APP_NAME = "Benchmarker";
 
+    public final static int DB_TYPE_REALM = 1;
+    public final static int DB_TYPE_ORMLITE = 2;
+    public final static int DB_TYPE_SUGARORM = 3;
+    public final static int DB_TYPE_GREENDAO = 4;
+    public final static int DB_TYPE_ACTIVEANDROID = 5;
+    public final static int DB_TYPE_DEFAULT = 6;
+
+    public final static String DB_TEST_SERVICE = "db_performance_testing_service";
+    public final static String DB_NUM_RECORDS = "numRecords";
+    public final static int DB_DEFAULT_RECORDS = 10;
+
+    public final static String RECEIVE_STATUS = "RecieveStatus";
+    public final static String RECEIVE_MSG = "ReceiveMsg";
+    public final static String RECEIVE_RESULT = "ReceiveResult";
+
+    public final static int RECEIVE_STATUS_MSG = 101;
+    public final static int RECEIVE_INSERT_TIME = 102;
+    public final static int RECEIVE_READ_TIME = 103;
+    public final static int TESTING_START = 111;
+    public final static int TESTING_END = 112;
+
+    public final static String RECEIVER_INTENT = "receiver";
 }

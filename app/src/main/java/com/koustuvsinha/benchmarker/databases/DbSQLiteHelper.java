@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
+import com.koustuvsinha.benchmarker.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,6 +47,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DATABASE_CREATE);
+        Log.i(Constants.APP_NAME,"SQLite database created..");
     }
 
     @Override
@@ -58,6 +60,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
     }
 
     public void insertData(List<DbTestRecordModel> modelList) {
+        Log.i(Constants.APP_NAME,"Beginning SQLite data insertion..");
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values;
         db.beginTransaction();
@@ -75,6 +78,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
         db.endTransaction();
 
         db.close();
+        Log.i(Constants.APP_NAME,"SQLite data insertion end");
     }
 
     public List<DbTestRecordModel> getData() {
