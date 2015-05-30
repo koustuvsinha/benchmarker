@@ -1,6 +1,10 @@
 package com.koustuvsinha.benchmarker.models;
 
+import android.text.format.Time;
+
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -13,7 +17,7 @@ public class DbResultModel {
 
     public DbResultModel(String resultMessage) {
         this.resultMessage = resultMessage;
-        this.resultTime = DateFormat.getDateTimeInstance().format(new Date());
+        this.resultTime = new SimpleDateFormat("hh:mm:ss.SSS").format(Calendar.getInstance().getTime());
     }
 
     public String getResultMessage() {

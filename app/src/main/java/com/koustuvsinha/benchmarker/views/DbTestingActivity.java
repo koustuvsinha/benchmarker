@@ -83,6 +83,7 @@ public class DbTestingActivity extends Activity {
                     if(resultData.getInt(Constants.RECEIVE_STATUS) == Constants.RECEIVE_STATUS_MSG) {
                         DbResultModel result = new DbResultModel(resultData.getString(Constants.RECEIVE_MSG));
                         mAdapter.setResults(result);
+                        mAdapter.notifyDataSetChanged();
                     }
                 }
             }

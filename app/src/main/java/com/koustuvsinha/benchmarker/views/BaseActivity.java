@@ -1,14 +1,21 @@
 package com.koustuvsinha.benchmarker.views;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbListAdaptor;
+import com.koustuvsinha.benchmarker.utils.Constants;
 import com.melnykov.fab.FloatingActionButton;
 
 import io.fabric.sdk.android.Fabric;
@@ -34,6 +41,15 @@ public class BaseActivity extends Activity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new DbListAdaptor();
         mRecyclerView.setAdapter(mAdapter);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(Constants.APP_NAME, "Clicked");
+                Intent intent = new Intent(BaseActivity.this,DbTestingActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //TODO: add on touch listener
     }

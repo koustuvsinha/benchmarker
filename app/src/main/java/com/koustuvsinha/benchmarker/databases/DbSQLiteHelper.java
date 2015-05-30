@@ -112,6 +112,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
 
     public void deleteAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_TEST,"1 = 1",null);
+        db.execSQL("delete from " + TABLE_TEST);
+        db.close();
     }
 }

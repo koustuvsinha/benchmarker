@@ -12,12 +12,11 @@ import com.koustuvsinha.benchmarker.databases.DbSQLiteHelper;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
+import org.fluttercode.datafactory.impl.DataFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import io.codearte.jfairy.Fairy;
-import io.codearte.jfairy.producer.person.Person;
 
 /**
  * Created by koustuv on 28/5/15.
@@ -36,15 +35,15 @@ public class DbTestRunnerService extends IntentService {
     private void prepareData() {
 
         int num = numRecords;
-        Fairy fairy = Fairy.create();
+
         records = new ArrayList<DbTestRecordModel>(num);
 
         while(num-- > 0) {
             DbTestRecordModel record = new DbTestRecordModel();
-            Person person = fairy.person();
-            record.setName(person.fullName());
-            record.setAge(person.age());
-            record.setAddress(person.getAddress().toString());
+            DataFactory person = new DataFactory();
+            record.setName(person.getName());
+            record.setAge(21);
+            record.setAddress(person.getAddress());
             records.add(record);
         }
     }
@@ -60,7 +59,17 @@ public class DbTestRunnerService extends IntentService {
         }
 
         long endTime = System.currentTimeMillis();
+
         return endTime - startTime;
+    }
+
+    private void cleanData(int dbType) {
+        switch(dbType) {
+            case Constants.DB_TYPE_DEFAULT :
+                DbSQLiteHelper sqLiteHelper = new DbSQLiteHelper(appContext);
+                sqLiteHelper.deleteAllData();
+                break;
+        }
     }
 
     private void testRunner() {
@@ -69,11 +78,13 @@ public class DbTestRunnerService extends IntentService {
         prepareData();
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Test Data Prepared");
 
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting inserting " + numRecords + " data records");
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting inserting " + numRecords + " data records into SQLite DB");
         long insertTime = testInsert(Constants.DB_TYPE_DEFAULT);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records took " + insertTime + " ms");
         sendMessage(Constants.RECEIVE_INSERT_TIME,insertTime);
+
+        cleanData(Constants.DB_TYPE_DEFAULT);
 
     }
 
