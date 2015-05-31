@@ -60,4 +60,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.melnykov:floatingactionbutton:1.3.0'
     compile 'org.fluttercode.datafactory:datafactory:0.8'
+    compile 'jp.wasabeef:recyclerview-animators:1.2.0@aar'
 }

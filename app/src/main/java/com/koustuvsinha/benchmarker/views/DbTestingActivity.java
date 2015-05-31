@@ -18,6 +18,9 @@ import com.koustuvsinha.benchmarker.services.DbTestResultsReceiverService;
 import com.koustuvsinha.benchmarker.services.DbTestRunnerService;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+
 public class DbTestingActivity extends Activity {
 
     private DbTestResultsReceiverService testResultsReceiver;
@@ -30,7 +33,9 @@ public class DbTestingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db_testing);
         mRecyclerView = (RecyclerView) findViewById(R.id.resultListView);
-        mRecyclerView.setHasFixedSize(true);
+        //mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(new SlideInLeftAnimator());
+        mRecyclerView.getItemAnimator().setAddDuration(500);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new DbResultAdaptor();
@@ -67,6 +72,7 @@ public class DbTestingActivity extends Activity {
         Intent i = new Intent(this, DbTestRunnerService.class);
         i.putExtra(Constants.DB_NUM_RECORDS,1000);
         i.putExtra(Constants.RECEIVER_INTENT,testResultsReceiver);
+        i.putExtra(Constants.DB_TYPE,Constants.DB_TYPE_DEFAULT);
         Log.i(Constants.APP_NAME, "Starting Service Intent..");
         startService(i);
     }
