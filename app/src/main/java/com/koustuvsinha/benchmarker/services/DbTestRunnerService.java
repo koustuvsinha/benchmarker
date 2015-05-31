@@ -9,6 +9,7 @@ import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.koustuvsinha.benchmarker.databases.DbSQLiteHelper;
+import com.koustuvsinha.benchmarker.databases.DbTestInterface;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
@@ -27,6 +28,8 @@ public class DbTestRunnerService extends IntentService {
     private Context appContext;
     private int numRecords;
     private ResultReceiver rec;
+    private int dbType;
+    private DbTestInterface dbTestInterface;
 
     public DbTestRunnerService() {
         super(Constants.DB_TEST_SERVICE);
@@ -48,43 +51,42 @@ public class DbTestRunnerService extends IntentService {
         }
     }
 
-    private long testInsert(int dbType) {
+    private long testInsert(DbTestInterface testInterface) {
         long startTime = System.currentTimeMillis();
 
-        switch(dbType) {
-            case Constants.DB_TYPE_DEFAULT :
-                DbSQLiteHelper sqLiteHelper = new DbSQLiteHelper(appContext);
-                sqLiteHelper.insertData(records);
-            break;
-        }
+        testInterface.insertData(records);
 
         long endTime = System.currentTimeMillis();
 
         return endTime - startTime;
     }
 
-    private void cleanData(int dbType) {
-        switch(dbType) {
-            case Constants.DB_TYPE_DEFAULT :
-                DbSQLiteHelper sqLiteHelper = new DbSQLiteHelper(appContext);
-                sqLiteHelper.deleteAllData();
-                break;
-        }
+    private void cleanData(DbTestInterface testInterface) {
+        testInterface.deleteAllData();
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Cleaned database");
     }
 
     private void testRunner() {
+
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Testing " + Constants.DB_LIST.get(dbType).getDbName());
+
+        switch(dbType) {
+            case Constants.DB_TYPE_DEFAULT :
+                dbTestInterface = new DbSQLiteHelper(appContext);
+                break;
+        }
 
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Preparing Test Data");
         prepareData();
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Test Data Prepared");
 
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting inserting " + numRecords + " data records into SQLite DB");
-        long insertTime = testInsert(Constants.DB_TYPE_DEFAULT);
+        long insertTime = testInsert(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records took " + insertTime + " ms");
         sendMessage(Constants.RECEIVE_INSERT_TIME,insertTime);
 
-        cleanData(Constants.DB_TYPE_DEFAULT);
+        cleanData(dbTestInterface);
 
     }
 
@@ -121,16 +123,26 @@ public class DbTestRunnerService extends IntentService {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(dbTestInterface != null) {
+            dbTestInterface.closeDb();
+        }
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
 
         Log.i(Constants.APP_NAME,"Intent received..");
-        rec = intent.getParcelableExtra("receiver");
+        rec = intent.getParcelableExtra(Constants.RECEIVER_INTENT);
+        dbType = intent.getIntExtra(Constants.DB_TYPE,Constants.DB_TYPE_DEFAULT);
         numRecords = intent.getIntExtra(Constants.DB_NUM_RECORDS,Constants.DB_DEFAULT_RECORDS);
 
         // start testing
         sendMessage(Constants.TESTING_START,"Testing started at " + new Date().toString());
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Testing started ...");
         testRunner();
-        sendMessage(Constants.TESTING_START,"Testing ended at " + new Date().toString());
-
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Testing complete");
+        sendMessage(Constants.TESTING_END,"Testing ended at " + new Date().toString());
     }
 }

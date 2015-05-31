@@ -13,4 +13,5 @@ public interface DbTestInterface {
     public List<DbTestRecordModel> getData();
     public void updateData(List<DbTestRecordModel> modelList);
     public void deleteAllData();
+    public void closeDb();
 }

@@ -20,12 +20,14 @@ public class Constants {
 
     public final static String APP_NAME = "Benchmarker";
 
-    public final static int DB_TYPE_REALM = 1;
-    public final static int DB_TYPE_ORMLITE = 2;
-    public final static int DB_TYPE_SUGARORM = 3;
-    public final static int DB_TYPE_GREENDAO = 4;
-    public final static int DB_TYPE_ACTIVEANDROID = 5;
-    public final static int DB_TYPE_DEFAULT = 6;
+    public final static int DB_TYPE_REALM = 0;
+    public final static int DB_TYPE_ORMLITE = 1;
+    public final static int DB_TYPE_SUGARORM = 2;
+    public final static int DB_TYPE_GREENDAO = 3;
+    public final static int DB_TYPE_ACTIVEANDROID = 4;
+    public final static int DB_TYPE_DEFAULT = 5;
+
+    public final static String DB_TYPE = "dbType";
 
     public final static String DB_TEST_SERVICE = "db_performance_testing_service";
     public final static String DB_NUM_RECORDS = "numRecords";
