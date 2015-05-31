@@ -68,6 +68,10 @@ public class DbTestRunnerService extends IntentService {
 
     private void testRunner() {
 
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Preparing Test Data");
+        prepareData();
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Test Data Prepared");
+
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Testing " + Constants.DB_LIST.get(dbType).getDbName());
 
         switch(dbType) {
@@ -76,11 +80,7 @@ public class DbTestRunnerService extends IntentService {
                 break;
         }
 
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Preparing Test Data");
-        prepareData();
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Test Data Prepared");
-
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting inserting " + numRecords + " data records into SQLite DB");
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting inserting " + numRecords + " data records into " + Constants.DB_LIST.get(dbType).getDbName());
         long insertTime = testInsert(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records took " + insertTime + " ms");
