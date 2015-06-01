@@ -163,5 +163,7 @@ public class DbTestRunnerService extends IntentService {
         testRunner();
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Testing complete");
         sendMessage(Constants.TESTING_END,"Testing ended at " + new Date().toString());
+
+        stopSelf();
     }
 }
