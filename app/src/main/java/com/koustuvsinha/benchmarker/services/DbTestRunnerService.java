@@ -61,6 +61,17 @@ public class DbTestRunnerService extends IntentService {
         return endTime - startTime;
     }
 
+    private long testRead(DbTestInterface testInterface) {
+        long startTime = System.currentTimeMillis();
+
+        ArrayList<DbTestRecordModel> list = (ArrayList)testInterface.getData();
+
+        long endTime = System.currentTimeMillis();
+
+        return endTime - startTime;
+
+    }
+
     private void cleanData(DbTestInterface testInterface) {
         testInterface.deleteAllData();
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Cleaned database");
@@ -80,11 +91,19 @@ public class DbTestRunnerService extends IntentService {
                 break;
         }
 
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting inserting " + numRecords + " data records into " + Constants.DB_LIST.get(dbType).getDbName());
+        String dbName = Constants.DB_LIST.get(dbType).getDbName();
+
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting inserting " + numRecords + " data records into " + dbName);
         long insertTime = testInsert(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records took " + insertTime + " ms");
         sendMessage(Constants.RECEIVE_INSERT_TIME,insertTime);
+
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting reading " + numRecords + " data records from " + dbName);
+        long readTime = testRead(dbTestInterface);
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records complete");
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records took " + readTime + " ms");
+        sendMessage(Constants.RECEIVE_READ_TIME,readTime);
 
         cleanData(dbTestInterface);
 

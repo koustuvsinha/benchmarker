@@ -44,17 +44,12 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
 
     public DbSQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        db = this.getWritableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DATABASE_CREATE);
         Log.i(Constants.APP_NAME,"SQLite database created..");
-    }
-
-    public void onDestroy(SQLiteDatabase sqLiteDatabase) {
-
     }
 
     @Override
@@ -68,6 +63,8 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
 
     public void insertData(List<DbTestRecordModel> modelList) {
         Log.i(Constants.APP_NAME,"Beginning SQLite data insertion..");
+
+        openDb(Constants.DB_MODE_WRITE);
 
         ContentValues values;
         db.beginTransaction();
@@ -84,10 +81,13 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
         db.setTransactionSuccessful();
         db.endTransaction();
         Log.i(Constants.APP_NAME,"SQLite data insertion end");
+
+        closeDb();
     }
 
     public List<DbTestRecordModel> getData() {
 
+        openDb(Constants.DB_MODE_READ);
         ArrayList<DbTestRecordModel> dataList;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(TABLE_TEST,new String[]
@@ -107,6 +107,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
         }
 
         cursor.close();
+        closeDb();
 
         return dataList;
     }
@@ -116,14 +117,26 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
     }
 
     public void deleteAllData() {
+        openDb(Constants.DB_MODE_WRITE);
         if(db!=null) {
             db.execSQL("delete from " + TABLE_TEST);
+        }
+        closeDb();
+    }
+
+    private void openDb(int mode) {
+        if(mode == Constants.DB_MODE_WRITE) {
+            db = this.getWritableDatabase();
+        }
+        else {
+            db = this.getReadableDatabase();
         }
     }
 
     public void closeDb() {
         if(db!=null) {
             db.close();
+            db = null;
         }
     }
 }

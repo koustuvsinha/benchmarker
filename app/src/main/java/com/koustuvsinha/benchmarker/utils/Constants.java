@@ -44,4 +44,7 @@ public class Constants {
     public final static int TESTING_END = 112;
 
     public final static String RECEIVER_INTENT = "receiver";
+
+    public final static int DB_MODE_READ = 113;
+    public final static int DB_MODE_WRITE = 114;
 }
