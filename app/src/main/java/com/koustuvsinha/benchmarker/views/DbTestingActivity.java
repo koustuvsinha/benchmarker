@@ -93,6 +93,7 @@ public class DbTestingActivity extends Activity {
                         DbResultModel result = new DbResultModel(resultData.getString(Constants.RECEIVE_MSG));
                         mAdapter.setResults(result);
                         mAdapter.notifyDataSetChanged();
+                        mRecyclerView.scrollToPosition(mAdapter.getItemCount()-1);
                     }
                 }
             }
