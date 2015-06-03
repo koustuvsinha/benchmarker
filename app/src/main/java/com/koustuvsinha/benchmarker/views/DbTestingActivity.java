@@ -1,8 +1,12 @@
 package com.koustuvsinha.benchmarker.views;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -105,6 +109,9 @@ public class DbTestingActivity extends Activity {
             File dir = context.getCacheDir();
             if (dir != null && dir.isDirectory()) {
                 deleteDir(dir);
+
+                SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                prefs.edit().clear().commit();
             }
         } catch (Exception e) {}
     }
@@ -122,11 +129,17 @@ public class DbTestingActivity extends Activity {
         return dir.delete();
     }
 
+
+    public void deleteAppData(Context context) {
+
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.i(Constants.APP_NAME,"Cleaning app cache");
         deleteCache(getApplicationContext());
+        deleteAppData(getApplicationContext());
         Log.i(Constants.APP_NAME,"Cleaned app cache");
     }
 }

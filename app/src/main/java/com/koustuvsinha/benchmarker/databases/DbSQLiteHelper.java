@@ -11,6 +11,7 @@ import android.util.Log;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +31,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
     private static final int DATABASE_VERSION = 1;
 
     private SQLiteDatabase db;
+    private Context mContext;
 
     //Database creation SQL statement
     private static final String DATABASE_CREATE = "create table " + TABLE_TEST
@@ -44,6 +46,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
 
     public DbSQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
     @Override
@@ -122,6 +125,9 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
             db.execSQL("delete from " + TABLE_TEST);
         }
         closeDb();
+        Log.i(Constants.APP_NAME,"Deleting db " + mContext.getDatabasePath(DATABASE_NAME).getAbsolutePath());
+        File file = new File(mContext.getDatabasePath(DATABASE_NAME).getAbsolutePath());
+        file.delete();
     }
 
     private void openDb(int mode) {
