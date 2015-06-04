@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,7 +29,7 @@ import java.io.File;
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
-public class DbTestingActivity extends Activity {
+public class DbTestingActivity extends AppCompatActivity {
 
     private DbTestResultsReceiverService testResultsReceiver;
     private RecyclerView mRecyclerView;

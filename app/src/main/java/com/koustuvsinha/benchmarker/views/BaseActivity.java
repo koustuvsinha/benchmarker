@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,7 +25,7 @@ import com.melnykov.fab.FloatingActionButton;
 import io.fabric.sdk.android.Fabric;
 
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -59,7 +60,7 @@ public class BaseActivity extends Activity {
                             @Override
                             public boolean onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
 
-                                final Intent intent = new Intent(BaseActivity.this,DbTestingActivity.class);
+                                final Intent intent = new Intent(BaseActivity.this, DbTestingActivity.class);
                                 intent.putExtra(Constants.TEST_LIMIT_SELECTED, Constants.TEST_LIMIT_VAL[i]);
                                 startActivity(intent);
                                 return true;
