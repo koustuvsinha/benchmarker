@@ -34,6 +34,7 @@ public class DbTestingActivity extends Activity {
     private RecyclerView mRecyclerView;
     private DbResultAdaptor mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private int numRecords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,9 @@ public class DbTestingActivity extends Activity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new DbResultAdaptor();
         mRecyclerView.setAdapter(mAdapter);
+
+        numRecords = getIntent().getIntExtra(Constants.TEST_LIMIT_SELECTED,1000);
+
         setupServiceReceiver();
         mAdapter.setResults(new DbResultModel("Starting Application..."));
         onStartTesting();
@@ -77,7 +81,8 @@ public class DbTestingActivity extends Activity {
 
     public void onStartTesting() {
         Intent i = new Intent(this, DbTestRunnerService.class);
-        i.putExtra(Constants.DB_NUM_RECORDS,1000);
+        Log.i(Constants.APP_NAME,"Received numRecords = " + numRecords);
+        i.putExtra(Constants.DB_NUM_RECORDS,numRecords);
         i.putExtra(Constants.RECEIVER_INTENT,testResultsReceiver);
         i.putExtra(Constants.DB_TYPE,Constants.DB_TYPE_DEFAULT);
         Log.i(Constants.APP_NAME, "Starting Service Intent..");

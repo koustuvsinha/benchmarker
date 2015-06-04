@@ -47,4 +47,8 @@ public class Constants {
 
     public final static int DB_MODE_READ = 113;
     public final static int DB_MODE_WRITE = 114;
+
+    public final static String[] TEST_LIMIT = {"1000", "10000", "100000" };
+    public final static int[] TEST_LIMIT_VAL = {1000,10000,100000};
+    public final static String TEST_LIMIT_SELECTED = "selectedTestLimit";
 }

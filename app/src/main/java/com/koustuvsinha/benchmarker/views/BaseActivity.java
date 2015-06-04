@@ -1,6 +1,7 @@
 package com.koustuvsinha.benchmarker.views;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.crashlytics.android.Crashlytics;
 import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbListAdaptor;
@@ -26,10 +29,12 @@ public class BaseActivity extends Activity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_base);
 
@@ -45,13 +50,28 @@ public class BaseActivity extends Activity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(Constants.APP_NAME, "Clicked");
-                Intent intent = new Intent(BaseActivity.this,DbTestingActivity.class);
-                startActivity(intent);
+
+                new MaterialDialog.Builder(mContext)
+                        .title("Select Test Limit")
+                        .items(Constants.TEST_LIMIT)
+                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+
+                            @Override
+                            public boolean onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
+
+                                final Intent intent = new Intent(BaseActivity.this,DbTestingActivity.class);
+                                intent.putExtra(Constants.TEST_LIMIT_SELECTED, Constants.TEST_LIMIT_VAL[i]);
+                                startActivity(intent);
+                                return true;
+                            }
+                        })
+                        .positiveText("Start Testing")
+                        .negativeText("Cancel")
+                        .show();
+
             }
         });
 
-        //TODO: add on touch listener
     }
 
 
