@@ -3,11 +3,16 @@ package com.koustuvsinha.benchmarker.views;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,41 +24,31 @@ import android.view.MenuItem;
 
 import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbResultAdaptor;
+import com.koustuvsinha.benchmarker.adaptors.ViewerPagerAdaptor;
 import com.koustuvsinha.benchmarker.models.DbResultModel;
 import com.koustuvsinha.benchmarker.services.DbTestResultsReceiverService;
 import com.koustuvsinha.benchmarker.services.DbTestRunnerService;
+import com.koustuvsinha.benchmarker.utils.BusProvider;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
 import java.io.File;
+import java.util.ArrayList;
 
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
-public class DbTestingActivity extends AppCompatActivity {
+public class DbTestingActivity extends FragmentActivity implements DbTestResultDetails.OnFragmentInteractionListener,DbTestResultStatus.OnFragmentInteractionListener {
 
     private DbTestResultsReceiverService testResultsReceiver;
-    private RecyclerView mRecyclerView;
-    private DbResultAdaptor mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private int numRecords;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db_testing);
-        mRecyclerView = (RecyclerView) findViewById(R.id.resultListView);
-        //mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setItemAnimator(new SlideInLeftAnimator());
-        mRecyclerView.getItemAnimator().setAddDuration(500);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new DbResultAdaptor();
-        mRecyclerView.setAdapter(mAdapter);
-
         numRecords = getIntent().getIntExtra(Constants.TEST_LIMIT_SELECTED,1000);
+        generateViews();
 
         setupServiceReceiver();
-        mAdapter.setResults(new DbResultModel("Starting Application..."));
         onStartTesting();
     }
 
@@ -96,14 +91,13 @@ public class DbTestingActivity extends AppCompatActivity {
 
             @Override
             public void onReceiveResult(int resultCode, Bundle resultData) {
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     // get the data and display accordingly
 
-                    if(resultData.getInt(Constants.RECEIVE_STATUS) == Constants.RECEIVE_STATUS_MSG) {
+                    if (resultData.getInt(Constants.RECEIVE_STATUS) == Constants.RECEIVE_STATUS_MSG) {
                         DbResultModel result = new DbResultModel(resultData.getString(Constants.RECEIVE_MSG));
-                        mAdapter.setResults(result);
-                        mAdapter.notifyDataSetChanged();
-                        mRecyclerView.scrollToPosition(mAdapter.getItemCount()-1);
+                        //pass this model to the fragment
+                        BusProvider.getInstance().getBus().post(result);
                     }
                 }
             }
@@ -147,5 +141,21 @@ public class DbTestingActivity extends AppCompatActivity {
         deleteCache(getApplicationContext());
         deleteAppData(getApplicationContext());
         Log.i(Constants.APP_NAME,"Cleaned app cache");
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    private void generateViews() {
+        ViewPager viewPager = (ViewPager)findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(2);
+
+        ArrayList<Fragment> fragments = new ArrayList<Fragment>();
+        fragments.add(DbTestResultStatus.newInstance());
+        fragments.add(DbTestResultDetails.newInstance());
+
+        viewPager.setAdapter(new ViewerPagerAdaptor(getSupportFragmentManager(), fragments));
     }
 }

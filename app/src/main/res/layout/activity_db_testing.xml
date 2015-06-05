@@ -1,15 +1,17 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.koustuvsinha.benchmarker.views.DbTestingActivity">
+<android.support.v4.view.ViewPager
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/viewPager"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/resultListView"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+<android.support.v4.view.PagerTitleStrip
+    android:id="@+id/pager_title_strip"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:background="#33b5e5"
+    android:textColor="#fff"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp" />
 
-</RelativeLayout>
+</android.support.v4.view.ViewPager>
