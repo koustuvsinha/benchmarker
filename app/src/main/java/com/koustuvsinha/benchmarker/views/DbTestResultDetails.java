@@ -28,7 +28,7 @@ public class DbTestResultDetails extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private OnFragmentInteractionListener mListener;
-    public static final String PAGE_NAME = "Detailed Test Results";
+    public static final String PAGE_NAME = "Logs";
 
 
     public static DbTestResultDetails newInstance() {
