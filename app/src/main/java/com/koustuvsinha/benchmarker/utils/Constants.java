@@ -40,6 +40,8 @@ public class Constants {
     public final static int RECEIVE_STATUS_MSG = 101;
     public final static int RECEIVE_INSERT_TIME = 102;
     public final static int RECEIVE_READ_TIME = 103;
+    public final static int RECEIVE_UPDATE_TIME = 104;
+    public final static int RECEIVE_DELETE_TIME = 105;
     public final static int TESTING_START = 111;
     public final static int TESTING_END = 112;
 
@@ -51,4 +53,7 @@ public class Constants {
     public final static String[] TEST_LIMIT = {"1000", "10000", "100000" };
     public final static int[] TEST_LIMIT_VAL = {1000,10000,100000};
     public final static String TEST_LIMIT_SELECTED = "selectedTestLimit";
+
+    public final static int PERCENT_TOTAL = 16;
+    public final static int PERCENT_STATUS = 120;
 }

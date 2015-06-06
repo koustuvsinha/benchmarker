@@ -97,20 +97,20 @@ public class DbTestRunnerService extends IntentService {
         long insertTime = testInsert(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records took " + insertTime + " ms");
-        sendMessage(Constants.RECEIVE_INSERT_TIME,insertTime);
+        sendMessage(Constants.RECEIVE_INSERT_TIME,Long.toString(insertTime));
 
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting reading " + numRecords + " data records from " + dbName);
         long readTime = testRead(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records took " + readTime + " ms");
-        sendMessage(Constants.RECEIVE_READ_TIME,readTime);
+        sendMessage(Constants.RECEIVE_READ_TIME,Long.toString(readTime));
 
         cleanData(dbTestInterface);
 
     }
 
     /*
-     * Message to send status messages
+     * Message to send status messages and results
      */
     private void sendMessage(int messageType, String message) {
         Log.i(Constants.APP_NAME, message);
@@ -122,18 +122,6 @@ public class DbTestRunnerService extends IntentService {
         rec.send(Activity.RESULT_OK,bundle);
     }
 
-    /*
-     * Message to send results
-     */
-    private void sendMessage(int messageType, long resultTime) {
-        Log.i(Constants.APP_NAME, Long.toString(resultTime));
-        Bundle bundle = new Bundle();
-
-        bundle.putInt(Constants.RECEIVE_STATUS, messageType);
-        bundle.putLong(Constants.RECEIVE_RESULT,resultTime);
-
-        rec.send(Activity.RESULT_OK,bundle);
-    }
 
     @Override
     public void onCreate() {

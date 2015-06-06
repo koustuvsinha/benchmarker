@@ -76,7 +76,7 @@
                         android:layout_height="100dp"
                         app:arc_progress="45"
                         app:arc_bottom_text="STATUS"
-                        app:arc_unfinished_color="#FFFFF"
+                        app:arc_unfinished_color="#FFFFFF"
                         app:arc_finished_color="#3F51B5"
                         />
 
@@ -119,6 +119,7 @@
                         android:weightSum="12">
 
                         <ImageView
+                            android:id="@+id/insertStatusImg"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -155,6 +156,7 @@
                         android:weightSum="12">
 
                         <ImageView
+                            android:id="@+id/readStatusImg"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -190,6 +192,7 @@
                         android:weightSum="12">
 
                         <ImageView
+                            android:id="@+id/updateStatusImg"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -225,6 +228,7 @@
                         android:weightSum="12">
 
                         <ImageView
+                            android:id="@+id/deleteStatusImg"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

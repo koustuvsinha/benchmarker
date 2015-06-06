@@ -26,6 +26,7 @@ import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbResultAdaptor;
 import com.koustuvsinha.benchmarker.adaptors.ViewerPagerAdaptor;
 import com.koustuvsinha.benchmarker.models.DbResultModel;
+import com.koustuvsinha.benchmarker.models.DbStatusMessageModel;
 import com.koustuvsinha.benchmarker.services.DbTestResultsReceiverService;
 import com.koustuvsinha.benchmarker.services.DbTestRunnerService;
 import com.koustuvsinha.benchmarker.utils.BusProvider;
@@ -39,6 +40,8 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
 
     private DbTestResultsReceiverService testResultsReceiver;
     private int numRecords;
+    private int dbType;
+    private int numPercent;
 
 
     @Override
@@ -46,8 +49,11 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db_testing);
         numRecords = getIntent().getIntExtra(Constants.TEST_LIMIT_SELECTED,1000);
-        generateViews();
 
+        dbType = Constants.DB_TYPE_DEFAULT;
+        numPercent = 0;
+
+        generateViews();
         setupServiceReceiver();
         onStartTesting();
     }
@@ -80,7 +86,7 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
         Log.i(Constants.APP_NAME,"Received numRecords = " + numRecords);
         i.putExtra(Constants.DB_NUM_RECORDS,numRecords);
         i.putExtra(Constants.RECEIVER_INTENT,testResultsReceiver);
-        i.putExtra(Constants.DB_TYPE,Constants.DB_TYPE_DEFAULT);
+        i.putExtra(Constants.DB_TYPE,dbType);
         Log.i(Constants.APP_NAME, "Starting Service Intent..");
         startService(i);
     }
@@ -92,13 +98,28 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
             @Override
             public void onReceiveResult(int resultCode, Bundle resultData) {
                 if (resultCode == RESULT_OK) {
+                    numPercent ++;
                     // get the data and display accordingly
 
-                    if (resultData.getInt(Constants.RECEIVE_STATUS) == Constants.RECEIVE_STATUS_MSG) {
+                    int statusCode = resultData.getInt(Constants.RECEIVE_STATUS);
+
+                    if (statusCode == Constants.RECEIVE_STATUS_MSG) {
                         DbResultModel result = new DbResultModel(resultData.getString(Constants.RECEIVE_MSG));
-                        //pass this model to the fragment
+                        //pass this model to the logs fragment
                         BusProvider.getInstance().getBus().post(result);
+                    } else {
+                        //pass everything else to the status fragment
+                        DbStatusMessageModel statusMessageModel = new DbStatusMessageModel();
+                        statusMessageModel.setStatusCode(statusCode);
+                        statusMessageModel.setStatusMessage(resultData.getString(Constants.RECEIVE_MSG));
+                        Log.i(Constants.APP_NAME, "-----> " + statusMessageModel.getStatusMessage());
+                        BusProvider.getInstance().getBus().post(statusMessageModel);
                     }
+
+                    DbStatusMessageModel percentStat = new DbStatusMessageModel();
+                    percentStat.setStatusCode(Constants.PERCENT_STATUS);
+                    percentStat.setStatusPercent((int)(((double) numPercent / Constants.PERCENT_TOTAL) * 100));
+                    BusProvider.getInstance().getBus().post(percentStat);
                 }
             }
         });
@@ -153,7 +174,7 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
         viewPager.setOffscreenPageLimit(2);
 
         ArrayList<Fragment> fragments = new ArrayList<Fragment>();
-        fragments.add(DbTestResultStatus.newInstance());
+        fragments.add(DbTestResultStatus.newInstance(dbType, numRecords));
         fragments.add(DbTestResultDetails.newInstance());
 
         viewPager.setAdapter(new ViewerPagerAdaptor(getSupportFragmentManager(), fragments));
