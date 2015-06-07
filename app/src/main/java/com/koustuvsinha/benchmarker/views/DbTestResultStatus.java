@@ -182,7 +182,7 @@ public class DbTestResultStatus extends Fragment {
     }
 
     private String calculatePerf(String perf) {
-        return String.format("%.2f",((double)numRecords / Integer.parseInt(perf)));
+        return String.format("%.2f",((double)numRecords / Integer.parseInt(perf))*1000);
     }
 
 }
