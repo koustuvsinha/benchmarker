@@ -72,9 +72,25 @@ public class DbTestRunnerService extends IntentService {
 
     }
 
-    private void cleanData(DbTestInterface testInterface) {
+    private long testUpdate(DbTestInterface testInterface) {
+        long startTime = System.currentTimeMillis();
+        testInterface.updateData();
+        long endTime = System.currentTimeMillis();
+
+        return endTime - startTime;
+    }
+
+    private long testDelete(DbTestInterface testInterface) {
+        long startTime = System.currentTimeMillis();
         testInterface.deleteAllData();
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Cleaned database");
+        long endTime = System.currentTimeMillis();
+
+        return endTime - startTime;
+    }
+
+    private void cleanData(DbTestInterface testInterface) {
+        testInterface.removeDbFile();
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Cleaned database file");
     }
 
     private void testRunner() {
@@ -103,7 +119,19 @@ public class DbTestRunnerService extends IntentService {
         long readTime = testRead(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records took " + readTime + " ms");
-        sendMessage(Constants.RECEIVE_READ_TIME,Long.toString(readTime));
+        sendMessage(Constants.RECEIVE_READ_TIME, Long.toString(readTime));
+
+        sendMessage(Constants.RECEIVE_STATUS_MSG, "Starting updating " + numRecords + " data records of " + dbName);
+        long updateTime = testUpdate(dbTestInterface);
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Updating of " + numRecords + " data records complete");
+        sendMessage(Constants.RECEIVE_STATUS_MSG, "Updating of " + numRecords + " data records took " + updateTime + " ms");
+        sendMessage(Constants.RECEIVE_UPDATE_TIME,Long.toString(updateTime));
+
+        sendMessage(Constants.RECEIVE_STATUS_MSG, "Starting deleting " + numRecords + " data records");
+        long deleteTime = testDelete(dbTestInterface);
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Deleting of " + numRecords + " data records complete");
+        sendMessage(Constants.RECEIVE_STATUS_MSG, "Deleting of " + numRecords + " data records took " + deleteTime + " ms");
+        sendMessage(Constants.RECEIVE_DELETE_TIME,Long.toString(deleteTime));
 
         cleanData(dbTestInterface);
 

@@ -32,6 +32,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
 
     private SQLiteDatabase db;
     private Context mContext;
+    private List<DbTestRecordModel> cachedRead;
 
     //Database creation SQL statement
     private static final String DATABASE_CREATE = "create table " + TABLE_TEST
@@ -52,7 +53,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DATABASE_CREATE);
-        Log.i(Constants.APP_NAME,"SQLite database created..");
+        Log.i(Constants.APP_NAME, "SQLite database created..");
     }
 
     @Override
@@ -65,7 +66,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
     }
 
     public void insertData(List<DbTestRecordModel> modelList) {
-        Log.i(Constants.APP_NAME,"Beginning SQLite data insertion..");
+        Log.i(Constants.APP_NAME, "Beginning SQLite data insertion..");
 
         openDb(Constants.DB_MODE_WRITE);
 
@@ -76,14 +77,14 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
         while(it.hasNext()) {
             DbTestRecordModel model = it.next();
             values = new ContentValues();
-            values.put(COLUMN_NAME,model.getName());
-            values.put(COLUMN_ADDRESS,model.getAddress());
-            values.put(COLUMN_AGE,model.getAge());
-            db.insert(TABLE_TEST,null,values);
+            values.put(COLUMN_NAME, model.getName());
+            values.put(COLUMN_ADDRESS, model.getAddress());
+            values.put(COLUMN_AGE, model.getAge());
+            db.insert(TABLE_TEST, null, values);
         }
         db.setTransactionSuccessful();
         db.endTransaction();
-        Log.i(Constants.APP_NAME,"SQLite data insertion end");
+        Log.i(Constants.APP_NAME, "SQLite data insertion end");
 
         closeDb();
     }
@@ -93,8 +94,8 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
         openDb(Constants.DB_MODE_READ);
         ArrayList<DbTestRecordModel> dataList;
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(TABLE_TEST,new String[]
-                { COLUMN_ID, COLUMN_NAME, COLUMN_AGE, COLUMN_ADDRESS},null,null,null,null,null);
+        Cursor cursor = db.query(TABLE_TEST, new String[]
+                {COLUMN_ID, COLUMN_NAME, COLUMN_AGE, COLUMN_ADDRESS}, null, null, null, null, null);
         if(cursor!=null)
             cursor.moveToFirst();
 
@@ -112,11 +113,30 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
         cursor.close();
         closeDb();
 
+        cachedRead = dataList;
         return dataList;
     }
 
-    public void updateData(List<DbTestRecordModel> modelList) {
+    public void updateData() {
 
+        openDb(Constants.DB_MODE_WRITE);
+        SQLiteDatabase db = this.getWritableDatabase();
+        Iterator<DbTestRecordModel> it = cachedRead.iterator();
+        db.beginTransaction();
+
+        while(it.hasNext()) {
+            DbTestRecordModel model = it.next();
+            ContentValues args = new ContentValues();
+            args.put(COLUMN_NAME,"na");
+            args.put(COLUMN_AGE,1);
+            args.put(COLUMN_ADDRESS,"na");
+            db.update(TABLE_TEST,args,COLUMN_ID + "=" + model.getId(),null);
+        }
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        Log.i(Constants.APP_NAME, "SQLite data update end");
+        closeDb();
     }
 
     public void deleteAllData() {
@@ -125,9 +145,6 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
             db.execSQL("delete from " + TABLE_TEST);
         }
         closeDb();
-        Log.i(Constants.APP_NAME,"Deleting db " + mContext.getDatabasePath(DATABASE_NAME).getAbsolutePath());
-        File file = new File(mContext.getDatabasePath(DATABASE_NAME).getAbsolutePath());
-        file.delete();
     }
 
     private void openDb(int mode) {
@@ -144,5 +161,11 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
             db.close();
             db = null;
         }
+    }
+
+    public void removeDbFile() {
+        Log.i(Constants.APP_NAME, "Deleting db " + mContext.getDatabasePath(DATABASE_NAME).getAbsolutePath());
+        File file = new File(mContext.getDatabasePath(DATABASE_NAME).getAbsolutePath());
+        file.delete();
     }
 }

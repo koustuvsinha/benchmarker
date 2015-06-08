@@ -54,7 +54,7 @@ public class Constants {
     public final static int[] TEST_LIMIT_VAL = {1000,10000,100000};
     public final static String TEST_LIMIT_SELECTED = "selectedTestLimit";
 
-    public final static int PERCENT_TOTAL = 16;
+    public final static int PERCENT_TOTAL = 24;
     public final static int PERCENT_STATUS = 120;
 
     public final static String SELECTED_DB_TEST = "selectedDb";
