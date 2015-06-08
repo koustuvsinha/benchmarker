@@ -10,12 +10,14 @@ Test and publish a detailed performance report on various databases and ORM's su
 * Full Material Design
 
 ## Target DB/ORM's
-* [Realm](http://realm.io)
-* [GreenDAO](http://greendao-orm.com)
-* [OrmLite](http://ormlite.com/sqlite_java_android_orm.shtml)
-* [SugarORM](http://satyan.github.io/sugar/index.html)
-* [ActiveAndroid](http://www.activeandroid.com/)
-* [Android SQLite](http://developer.android.com/training/basics/data-storage/databases.html)
+- [x] [Realm](http://realm.io)
+- [ ] [GreenDAO](http://greendao-orm.com)
+- [ ] [OrmLite](http://ormlite.com/sqlite_java_android_orm.shtml)
+- [ ] [SugarORM](http://satyan.github.io/sugar/index.html)
+- [ ] [ActiveAndroid](http://www.activeandroid.com/)
+- [x] [Android SQLite](http://developer.android.com/training/basics/data-storage/databases.html)
+
+*Checkmarks indicate test cases updated till now*
 
 ## Further Planning
 * Display detailed performance test report on separate webpage
