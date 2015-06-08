@@ -89,7 +89,7 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
         closeDb();
     }
 
-    public List<DbTestRecordModel> getData() {
+    public void getData() {
 
         openDb(Constants.DB_MODE_READ);
         ArrayList<DbTestRecordModel> dataList;
@@ -114,7 +114,6 @@ public class DbSQLiteHelper extends SQLiteOpenHelper implements DbTestInterface 
         closeDb();
 
         cachedRead = dataList;
-        return dataList;
     }
 
     public void updateData() {

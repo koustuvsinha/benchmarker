@@ -10,7 +10,7 @@ import java.util.List;
 public interface DbTestInterface {
 
     public void insertData(List<DbTestRecordModel> modelList);
-    public List<DbTestRecordModel> getData();
+    public void getData();
     public void updateData();
     public void deleteAllData();
     public void closeDb();

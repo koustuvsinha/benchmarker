@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
+import com.koustuvsinha.benchmarker.databases.DbRealmHelper;
 import com.koustuvsinha.benchmarker.databases.DbSQLiteHelper;
 import com.koustuvsinha.benchmarker.databases.DbTestInterface;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
@@ -64,7 +65,7 @@ public class DbTestRunnerService extends IntentService {
     private long testRead(DbTestInterface testInterface) {
         long startTime = System.currentTimeMillis();
 
-        ArrayList<DbTestRecordModel> list = (ArrayList)testInterface.getData();
+        testInterface.getData();
 
         long endTime = System.currentTimeMillis();
 
@@ -104,6 +105,9 @@ public class DbTestRunnerService extends IntentService {
         switch(dbType) {
             case Constants.DB_TYPE_DEFAULT :
                 dbTestInterface = new DbSQLiteHelper(appContext);
+                break;
+            case Constants.DB_TYPE_REALM :
+                dbTestInterface = new DbRealmHelper(appContext);
                 break;
         }
 
