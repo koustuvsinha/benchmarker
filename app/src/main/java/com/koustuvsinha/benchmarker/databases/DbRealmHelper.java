@@ -70,6 +70,10 @@ public class DbRealmHelper implements DbTestInterface {
             cachedRead.get(i).setName("na");
             cachedRead.get(i).setAge(0);
             cachedRead.get(i).setAddress("na");
+            if(i%1000 == 0) {
+                realm.commitTransaction();
+                realm.beginTransaction();
+            }
         }
 
         realm.commitTransaction();
