@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.Theme;
 import com.crashlytics.android.Crashlytics;
 import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbListAdaptor;
+import com.koustuvsinha.benchmarker.listeners.DbItemClickListener;
 import com.koustuvsinha.benchmarker.utils.Constants;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -48,7 +49,44 @@ public class BaseActivity extends AppCompatActivity {
         mAdapter = new DbListAdaptor();
         mRecyclerView.setAdapter(mAdapter);
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        mRecyclerView.addOnItemTouchListener(
+                new DbItemClickListener(this, new DbItemClickListener.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(View view, final int position) {
+
+                        Toast.makeText(getApplicationContext(), "Selected " + position, Toast.LENGTH_SHORT).show();
+
+                        if(position == Constants.DB_TYPE_DEFAULT) {
+
+                            new MaterialDialog.Builder(mContext)
+                                    .title("Select Test Limit")
+                                    .items(Constants.TEST_LIMIT)
+                                    .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+
+                                        @Override
+                                        public boolean onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
+
+                                            final Intent intent = new Intent(BaseActivity.this, DbTestingActivity.class);
+                                            intent.putExtra(Constants.TEST_LIMIT_SELECTED, Constants.TEST_LIMIT_VAL[i]);
+                                            intent.putExtra(Constants.SELECTED_DB_TEST, position);
+                                            startActivity(intent);
+                                            return true;
+                                        }
+                                    })
+                                    .positiveText("Start Testing")
+                                    .negativeText("Cancel")
+                                    .show();
+                        } else {
+
+                            Toast.makeText(getApplicationContext(), "Tests are not yet ready!", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                })
+        );
+
+        /*fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -71,7 +109,7 @@ public class BaseActivity extends AppCompatActivity {
                         .show();
 
             }
-        });
+        });*/
 
     }
 

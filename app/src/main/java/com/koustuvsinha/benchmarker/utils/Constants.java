@@ -56,4 +56,6 @@ public class Constants {
 
     public final static int PERCENT_TOTAL = 16;
     public final static int PERCENT_STATUS = 120;
+
+    public final static String SELECTED_DB_TEST = "selectedDb";
 }

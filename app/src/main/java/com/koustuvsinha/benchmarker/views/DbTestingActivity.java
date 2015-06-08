@@ -50,7 +50,7 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
         setContentView(R.layout.activity_db_testing);
         numRecords = getIntent().getIntExtra(Constants.TEST_LIMIT_SELECTED,1000);
 
-        dbType = Constants.DB_TYPE_DEFAULT;
+        dbType = getIntent().getIntExtra(Constants.SELECTED_DB_TEST,5);
         numPercent = 0;
 
         generateViews();
