@@ -21,8 +21,7 @@ import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 
 public class DbTestResultDetails extends Fragment {
-
-    private DbTestResultsReceiverService testResultsReceiver;
+    
     private RecyclerView mRecyclerView;
     private DbResultAdaptor mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;

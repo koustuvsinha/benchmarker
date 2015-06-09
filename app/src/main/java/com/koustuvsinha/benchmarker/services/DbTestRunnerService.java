@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.koustuvsinha.benchmarker.databases.DbRealmHelper;
@@ -28,7 +29,6 @@ public class DbTestRunnerService extends IntentService {
     private List<DbTestRecordModel> records;
     private Context appContext;
     private int numRecords;
-    private ResultReceiver rec;
     private int dbType;
     private DbTestInterface dbTestInterface;
 
@@ -146,12 +146,13 @@ public class DbTestRunnerService extends IntentService {
      */
     private void sendMessage(int messageType, String message) {
         Log.i(Constants.APP_NAME, message);
-        Bundle bundle = new Bundle();
 
-        bundle.putInt(Constants.RECEIVE_STATUS,messageType);
-        bundle.putString(Constants.RECEIVE_MSG,message);
+        Intent packet = new Intent(Constants.INTENT_FILTER);
+        packet.putExtra("resultCode", Activity.RESULT_OK);
+        packet.putExtra(Constants.RECEIVE_STATUS,messageType);
+        packet.putExtra(Constants.RECEIVE_MSG,message);
 
-        rec.send(Activity.RESULT_OK,bundle);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(packet);
     }
 
 
@@ -173,7 +174,7 @@ public class DbTestRunnerService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         Log.i(Constants.APP_NAME,"Intent received..");
-        rec = intent.getParcelableExtra(Constants.RECEIVER_INTENT);
+
         dbType = intent.getIntExtra(Constants.DB_TYPE,Constants.DB_TYPE_DEFAULT);
         numRecords = intent.getIntExtra(Constants.DB_NUM_RECORDS,Constants.DB_DEFAULT_RECORDS);
 

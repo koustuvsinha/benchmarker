@@ -62,4 +62,5 @@ public class Constants {
     public final static int PERCENT_STATUS = 120;
 
     public final static String SELECTED_DB_TEST = "selectedDb";
+    public final static String INTENT_FILTER = "com.koustuvsinha.benchmarker.services.DbTestRunnerService";
 }

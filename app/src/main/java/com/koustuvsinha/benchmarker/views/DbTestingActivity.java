@@ -1,29 +1,21 @@
 package com.koustuvsinha.benchmarker.views;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.ActivityManager;
-
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.koustuvsinha.benchmarker.R;
-import com.koustuvsinha.benchmarker.adaptors.DbResultAdaptor;
 import com.koustuvsinha.benchmarker.adaptors.ViewerPagerAdaptor;
 import com.koustuvsinha.benchmarker.models.DbResultModel;
 import com.koustuvsinha.benchmarker.models.DbStatusMessageModel;
@@ -38,7 +30,6 @@ import java.util.ArrayList;
 
 public class DbTestingActivity extends FragmentActivity implements DbTestResultDetails.OnFragmentInteractionListener,DbTestResultStatus.OnFragmentInteractionListener {
 
-    private DbTestResultsReceiverService testResultsReceiver;
     private int numRecords;
     private int dbType;
     private int numPercent;
@@ -54,7 +45,7 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
         numPercent = 0;
 
         generateViews();
-        setupServiceReceiver();
+        //setupServiceReceiver();
         onStartTesting();
     }
 
@@ -83,47 +74,46 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
 
     public void onStartTesting() {
         Intent i = new Intent(this, DbTestRunnerService.class);
-        Log.i(Constants.APP_NAME,"Received numRecords = " + numRecords);
+        Log.i(Constants.APP_NAME, "Received numRecords = " + numRecords);
         i.putExtra(Constants.DB_NUM_RECORDS,numRecords);
-        i.putExtra(Constants.RECEIVER_INTENT,testResultsReceiver);
         i.putExtra(Constants.DB_TYPE,dbType);
         Log.i(Constants.APP_NAME, "Starting Service Intent..");
         startService(i);
     }
 
-    public void setupServiceReceiver() {
-        testResultsReceiver = new DbTestResultsReceiverService(new Handler());
-        testResultsReceiver.setReceiver(new DbTestResultsReceiverService.Receiver() {
 
-            @Override
-            public void onReceiveResult(int resultCode, Bundle resultData) {
-                if (resultCode == RESULT_OK) {
-                    numPercent ++;
-                    // get the data and display accordingly
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int resultCode = intent.getIntExtra("resultCode", RESULT_CANCELED);
 
-                    int statusCode = resultData.getInt(Constants.RECEIVE_STATUS);
+            if (resultCode == RESULT_OK) {
+                numPercent ++;
+                // get the data and display accordingly
 
-                    if (statusCode == Constants.RECEIVE_STATUS_MSG) {
-                        DbResultModel result = new DbResultModel(resultData.getString(Constants.RECEIVE_MSG));
-                        //pass this model to the logs fragment
-                        BusProvider.getInstance().getBus().post(result);
-                    } else {
-                        //pass everything else to the status fragment
-                        DbStatusMessageModel statusMessageModel = new DbStatusMessageModel();
-                        statusMessageModel.setStatusCode(statusCode);
-                        statusMessageModel.setStatusMessage(resultData.getString(Constants.RECEIVE_MSG));
-                        Log.i(Constants.APP_NAME, "-----> " + statusMessageModel.getStatusMessage());
-                        BusProvider.getInstance().getBus().post(statusMessageModel);
-                    }
+                int statusCode = intent.getIntExtra(Constants.RECEIVE_STATUS, 0);
+                Log.i(Constants.APP_NAME,"Status code -------------------.... " + statusCode);
 
-                    DbStatusMessageModel percentStat = new DbStatusMessageModel();
-                    percentStat.setStatusCode(Constants.PERCENT_STATUS);
-                    percentStat.setStatusPercent((int)(((double) numPercent / Constants.PERCENT_TOTAL) * 100));
-                    BusProvider.getInstance().getBus().post(percentStat);
+                if (statusCode == Constants.RECEIVE_STATUS_MSG) {
+                    DbResultModel result = new DbResultModel(intent.getStringExtra(Constants.RECEIVE_MSG));
+                    //pass this model to the logs fragment
+                    BusProvider.getInstance().getBus().post(result);
+                } else {
+                    //pass everything else to the status fragment
+                    DbStatusMessageModel statusMessageModel = new DbStatusMessageModel();
+                    statusMessageModel.setStatusCode(statusCode);
+                    statusMessageModel.setStatusMessage(intent.getStringExtra(Constants.RECEIVE_MSG));
+                    Log.i(Constants.APP_NAME, "-----> " + statusMessageModel.getStatusMessage());
+                    BusProvider.getInstance().getBus().post(statusMessageModel);
                 }
+
+                DbStatusMessageModel percentStat = new DbStatusMessageModel();
+                percentStat.setStatusCode(Constants.PERCENT_STATUS);
+                percentStat.setStatusPercent((int)(((double) numPercent / Constants.PERCENT_TOTAL) * 100));
+                BusProvider.getInstance().getBus().post(percentStat);
             }
-        });
-    }
+        }
+    };
 
     public void deleteCache(Context context) {
         try {
@@ -178,5 +168,18 @@ public class DbTestingActivity extends FragmentActivity implements DbTestResultD
         fragments.add(DbTestResultDetails.newInstance());
 
         viewPager.setAdapter(new ViewerPagerAdaptor(getSupportFragmentManager(), fragments));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(Constants.INTENT_FILTER);
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
     }
 }
