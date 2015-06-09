@@ -10,22 +10,26 @@ import java.util.ArrayList;
 public class Constants {
 
     public final static ArrayList<DbFactoryModel> DB_LIST = new ArrayList<DbFactoryModel>() {{
+        add(new DbFactoryModel("Android SQLite","v1.0","Android",true));
         add(new DbFactoryModel("Realm","v0.83.3","Realm",true));
+        add(new DbFactoryModel("SnappyDB","v0.1.0","nhachicha",true));
         add(new DbFactoryModel("ORM Lite Android","v4.48","ORM Lite",true));
         add(new DbFactoryModel("Sugar ORM","v1.4","Satya Narayan",true));
         add(new DbFactoryModel("Green DAO","v1.3","Green DAO",true));
         add(new DbFactoryModel("Active Android","v3.0","Michael Pardo",true));
-        add(new DbFactoryModel("Android SQLite","v1.0","Android",true));
+        add(new DbFactoryModel("DBFlow","v2.0.0","Raizlabs",true));
     }};
 
     public final static String APP_NAME = "Benchmarker";
 
-    public final static int DB_TYPE_REALM = 0;
-    public final static int DB_TYPE_ORMLITE = 1;
-    public final static int DB_TYPE_SUGARORM = 2;
-    public final static int DB_TYPE_GREENDAO = 3;
-    public final static int DB_TYPE_ACTIVEANDROID = 4;
-    public final static int DB_TYPE_DEFAULT = 5;
+    public final static int DB_TYPE_DEFAULT = 0;
+    public final static int DB_TYPE_REALM = 1;
+    public final static int DB_TYPE_SNAPPY = 2;
+    public final static int DB_TYPE_ORMLITE = 3;
+    public final static int DB_TYPE_SUGARORM = 4;
+    public final static int DB_TYPE_GREENDAO = 5;
+    public final static int DB_TYPE_ACTIVEANDROID = 6;
+    public final static int DB_TYPE_DBFLOW = 7;
 
     public final static String DB_TYPE = "dbType";
 
