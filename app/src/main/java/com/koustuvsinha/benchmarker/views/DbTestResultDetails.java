@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbResultAdaptor;
 import com.koustuvsinha.benchmarker.models.DbResultModel;
-import com.koustuvsinha.benchmarker.services.DbTestResultsReceiverService;
 import com.koustuvsinha.benchmarker.utils.BusProvider;
 import com.squareup.otto.Subscribe;
 
@@ -21,7 +20,7 @@ import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 
 public class DbTestResultDetails extends Fragment {
-    
+
     private RecyclerView mRecyclerView;
     private DbResultAdaptor mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
