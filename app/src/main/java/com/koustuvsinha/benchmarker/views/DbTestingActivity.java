@@ -19,7 +19,6 @@ import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.ViewerPagerAdaptor;
 import com.koustuvsinha.benchmarker.models.DbResultModel;
 import com.koustuvsinha.benchmarker.models.DbStatusMessageModel;
-import com.koustuvsinha.benchmarker.services.DbTestResultsReceiverService;
 import com.koustuvsinha.benchmarker.services.DbTestRunnerService;
 import com.koustuvsinha.benchmarker.utils.BusProvider;
 import com.koustuvsinha.benchmarker.utils.Constants;

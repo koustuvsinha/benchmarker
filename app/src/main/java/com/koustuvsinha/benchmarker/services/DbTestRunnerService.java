@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.koustuvsinha.benchmarker.databases.DbRealmHelper;
 import com.koustuvsinha.benchmarker.databases.DbSQLiteHelper;
+import com.koustuvsinha.benchmarker.databases.DbSnappyHelper;
 import com.koustuvsinha.benchmarker.databases.DbTestInterface;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
 import com.koustuvsinha.benchmarker.utils.Constants;
@@ -108,6 +109,9 @@ public class DbTestRunnerService extends IntentService {
                 break;
             case Constants.DB_TYPE_REALM :
                 dbTestInterface = new DbRealmHelper(appContext);
+                break;
+            case Constants.DB_TYPE_SNAPPY :
+                dbTestInterface = new DbSnappyHelper(appContext);
                 break;
         }
 

@@ -9,6 +9,7 @@ public class DbTestRecordModel {
     private String name;
     private String address;
     private int age;
+    private String newId;
 
     public long getId() {
         return id;
@@ -40,5 +41,13 @@ public class DbTestRecordModel {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getNewId() {
+        return newId;
+    }
+
+    public void setNewId(String newId) {
+        this.newId = newId;
     }
 }

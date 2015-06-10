@@ -55,9 +55,7 @@ public class BaseActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, final int position) {
 
-                        Toast.makeText(getApplicationContext(), "Selected " + position, Toast.LENGTH_SHORT).show();
-
-                        if(position == Constants.DB_TYPE_DEFAULT || position == Constants.DB_TYPE_REALM) {
+                        if(position == Constants.DB_TYPE_DEFAULT || position == Constants.DB_TYPE_REALM || position == Constants.DB_TYPE_SNAPPY) {
 
                             new MaterialDialog.Builder(mContext)
                                     .title("Select Test Limit")
