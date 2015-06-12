@@ -2,18 +2,22 @@ package com.koustuvsinha.benchmarker.services;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.databases.DbRealmHelper;
 import com.koustuvsinha.benchmarker.databases.DbSQLiteHelper;
 import com.koustuvsinha.benchmarker.databases.DbSnappyHelper;
 import com.koustuvsinha.benchmarker.databases.DbTestInterface;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
+import com.koustuvsinha.benchmarker.utils.AppUtils;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
 import org.fluttercode.datafactory.impl.DataFactory;
@@ -97,6 +101,7 @@ public class DbTestRunnerService extends IntentService {
 
     private void testRunner() {
 
+        long testTime = System.currentTimeMillis();
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Preparing Test Data");
         prepareData();
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Test Data Prepared");
@@ -142,6 +147,16 @@ public class DbTestRunnerService extends IntentService {
         sendMessage(Constants.RECEIVE_DELETE_TIME,Long.toString(deleteTime));
 
         cleanData(dbTestInterface);
+        testTime = System.currentTimeMillis() - testTime;
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(appContext)
+                        .setSmallIcon(R.drawable.ic_assignment_turned_in_black_24dp)
+                        .setContentTitle("Testing Complete")
+                        .setContentText("Testing " + Constants.DB_LIST.get(dbType).getDbName() + " took " + testTime + " ms" );
+        NotificationManager mNotificationManager =
+                (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(AppUtils.getInstance().getNextNotificationId(),mBuilder.build());
 
     }
 

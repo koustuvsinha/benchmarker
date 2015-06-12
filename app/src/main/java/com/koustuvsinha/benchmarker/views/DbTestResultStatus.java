@@ -1,12 +1,15 @@
 package com.koustuvsinha.benchmarker.views;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,13 +46,13 @@ public class DbTestResultStatus extends Fragment {
     private Drawable checkMark;
 
 
-
     public static DbTestResultStatus newInstance(int dbType,int numRecords) {
         DbTestResultStatus fragment = new DbTestResultStatus();
         Bundle args = new Bundle();
         args.putInt(Constants.DB_TYPE,dbType);
-        args.putInt(Constants.DB_NUM_RECORDS,numRecords);
+        args.putInt(Constants.DB_NUM_RECORDS, numRecords);
         fragment.setArguments(args);
+        Log.i(Constants.APP_NAME,"________New Instance_________");
         return fragment;
     }
 
@@ -60,6 +63,7 @@ public class DbTestResultStatus extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         BusProvider.getInstance().getBus().register(this);
         if(savedInstanceState!=null) {
             dbType = savedInstanceState.getInt(Constants.DB_TYPE);

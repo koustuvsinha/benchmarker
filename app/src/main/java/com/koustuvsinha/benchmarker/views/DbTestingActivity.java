@@ -1,5 +1,6 @@
 package com.koustuvsinha.benchmarker.views;
 
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -109,6 +111,7 @@ public class DbTestingActivity extends AppCompatActivity implements DbTestResult
                     //pass this model to the logs fragment
                     BusProvider.getInstance().getBus().post(result);
                 } else {
+
                     //pass everything else to the status fragment
                     DbStatusMessageModel statusMessageModel = new DbStatusMessageModel();
                     statusMessageModel.setStatusCode(statusCode);

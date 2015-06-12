@@ -42,6 +42,7 @@ public class DbTestResultDetails extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         BusProvider.getInstance().getBus().register(this);
     }
 
