@@ -7,10 +7,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,21 +28,31 @@ import java.io.File;
 import java.util.ArrayList;
 
 
-public class DbTestingActivity extends FragmentActivity implements DbTestResultDetails.OnFragmentInteractionListener,DbTestResultStatus.OnFragmentInteractionListener {
+public class DbTestingActivity extends AppCompatActivity implements DbTestResultDetails.OnFragmentInteractionListener,DbTestResultStatus.OnFragmentInteractionListener {
 
     private int numRecords;
     private int dbType;
     private int numPercent;
+    private Toolbar mToolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db_testing);
+
+        mToolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
         numRecords = getIntent().getIntExtra(Constants.TEST_LIMIT_SELECTED,1000);
 
         dbType = getIntent().getIntExtra(Constants.SELECTED_DB_TEST,5);
         numPercent = 0;
+
+        getSupportActionBar().setTitle(Constants.DB_LIST.get(dbType).getDbName());
+        getSupportActionBar().setSubtitle("Testing with " + numRecords + " rows of data");
 
         generateViews();
         //setupServiceReceiver();
