@@ -30,4 +30,5 @@ public class AppUtils {
     public int getNextNotificationId() {
         return ++ notificationId;
     }
+    
 }

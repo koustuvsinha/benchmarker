@@ -27,6 +27,7 @@ public class DbResultsSaver extends SQLiteOpenHelper {
     public static final String COLUMN_INSERT_TIME = "insertTime";
     public static final String COLUMN_UPDATE_TIME = "updateTime";
     public static final String COLUMN_DELETE_TIME = "deleteTime";
+    public static final String COLUMN_NUM_ROWS = "numRows";
 
     private static final String DATABASE_NAME = "resultsSaver.db";
     private static final int DATABASE_VERSION = 1;
@@ -42,7 +43,8 @@ public class DbResultsSaver extends SQLiteOpenHelper {
             + COLUMN_READ_TIME + " integer not null, "
             + COLUMN_INSERT_TIME + " integer not null, "
             + COLUMN_UPDATE_TIME + " integer not null, "
-            + COLUMN_DELETE_TIME + " integer not null"
+            + COLUMN_DELETE_TIME + " integer not null, "
+            + COLUMN_NUM_ROWS + " integer not null"
             + ");";
 
 
@@ -81,6 +83,7 @@ public class DbResultsSaver extends SQLiteOpenHelper {
         values.put(COLUMN_READ_TIME,saverModel.getReadTime());
         values.put(COLUMN_UPDATE_TIME,saverModel.getUpdateTime());
         values.put(COLUMN_DELETE_TIME,saverModel.getDeleteTime());
+        values.put(COLUMN_NUM_ROWS,saverModel.getNumRows());
 
         db.insert(TABLE_SAVE, null, values);
         db.setTransactionSuccessful();
@@ -91,30 +94,36 @@ public class DbResultsSaver extends SQLiteOpenHelper {
 
     public DbResultsSaverModel getFirstTestData(int dbType) {
 
+        openDb(Constants.DB_MODE_READ);
         Cursor cursor = db.rawQuery("select * from "
                 + TABLE_SAVE
-                + " as t where "
+                + " where "
                 + COLUMN_DB_TYPE + " = ? "
                 + "and " + COLUMN_ID
                 +  " = (select min(" + COLUMN_ID + ") from "
-                + TABLE_SAVE + ")",new String[dbType]);
+                + TABLE_SAVE + ")",new String[] {Integer.toString(dbType)});
 
 
-        return extractFromCursor(cursor);
+        DbResultsSaverModel sv = extractFromCursor(cursor);
+        closeDb();
+        return sv;
     }
 
     public DbResultsSaverModel getLatestTestData(int dbType) {
 
+        openDb(Constants.DB_MODE_READ);
         Cursor cursor = db.rawQuery("select * from "
                 + TABLE_SAVE
-                + " as t where "
+                + " where "
                 + COLUMN_DB_TYPE + " = ? "
                 + "and " + COLUMN_ID
                 +  " = (select max(" + COLUMN_ID + ") from "
-                + TABLE_SAVE + ")",new String[dbType]);
+                + TABLE_SAVE + ")",new String[]{Integer.toString(dbType)});
 
 
-        return extractFromCursor(cursor);
+        DbResultsSaverModel sv = extractFromCursor(cursor);
+        closeDb();
+        return sv;
     }
 
     private void openDb(int mode) {
@@ -134,11 +143,11 @@ public class DbResultsSaver extends SQLiteOpenHelper {
     }
 
     private DbResultsSaverModel extractFromCursor(Cursor cursor) {
-        openDb(Constants.DB_MODE_READ);
 
         DbResultsSaverModel saverModel = new DbResultsSaverModel();
-        if(cursor!=null) {
+        if(cursor!=null && cursor.getCount() == 1) {
             cursor.moveToFirst();
+            saverModel.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
             saverModel.setDbType(cursor.getInt(cursor.getColumnIndex(COLUMN_DB_TYPE)));
             saverModel.setTestDate(cursor.getString(cursor.getColumnIndex(COLUMN_TEST_DATE)));
             saverModel.setTestTime(cursor.getString(cursor.getColumnIndex(COLUMN_TEST_TIME)));
@@ -146,9 +155,9 @@ public class DbResultsSaver extends SQLiteOpenHelper {
             saverModel.setReadTime(cursor.getInt(cursor.getColumnIndex(COLUMN_READ_TIME)));
             saverModel.setUpdateTime(cursor.getInt(cursor.getColumnIndex(COLUMN_UPDATE_TIME)));
             saverModel.setDeleteTime(cursor.getInt(cursor.getColumnIndex(COLUMN_DELETE_TIME)));
+            saverModel.setNumRows(cursor.getInt(cursor.getColumnIndex(COLUMN_NUM_ROWS)));
         }
 
-        closeDb();
         return saverModel;
     }
 }

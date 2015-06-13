@@ -18,9 +18,11 @@ public class DbResultsSaverModel {
     private int insertTime;
     private int updateTime;
     private int deleteTime;
+    private int numRows;
 
     public DbResultsSaverModel() {
         Date date = Calendar.getInstance().getTime();
+        this.id = 0;
         this.testDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
         this.testTime = new SimpleDateFormat("hh:mm",Locale.ENGLISH).format(date);
     }
@@ -87,5 +89,13 @@ public class DbResultsSaverModel {
 
     public void setDeleteTime(int deleteTime) {
         this.deleteTime = deleteTime;
+    }
+
+    public int getNumRows() {
+        return numRows;
+    }
+
+    public void setNumRows(int numRows) {
+        this.numRows = numRows;
     }
 }

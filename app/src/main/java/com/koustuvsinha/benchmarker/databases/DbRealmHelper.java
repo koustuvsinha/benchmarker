@@ -32,6 +32,7 @@ public class DbRealmHelper implements DbTestInterface {
 
     @Override
     public void insertData(List<DbTestRecordModel> modelList) {
+        deleteAllData();
         openDb();
         realm.beginTransaction();
 

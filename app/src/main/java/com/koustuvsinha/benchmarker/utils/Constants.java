@@ -9,17 +9,6 @@ import java.util.ArrayList;
  */
 public class Constants {
 
-    public final static ArrayList<DbFactoryModel> DB_LIST = new ArrayList<DbFactoryModel>() {{
-        add(new DbFactoryModel("Android SQLite","v1.0","Android",true));
-        add(new DbFactoryModel("Realm","v0.83.3","Realm",true));
-        add(new DbFactoryModel("SnappyDB","v0.1.0","nhachicha",true));
-        add(new DbFactoryModel("ORM Lite Android","v4.48","ORM Lite",true));
-        add(new DbFactoryModel("Sugar ORM","v1.4","Satya Narayan",true));
-        add(new DbFactoryModel("Green DAO","v1.3","Green DAO",true));
-        add(new DbFactoryModel("Active Android","v3.0","Michael Pardo",true));
-        add(new DbFactoryModel("DBFlow","v2.0.0","Raizlabs",true));
-    }};
-
     public final static String APP_NAME = "Benchmarker";
 
     public final static int DB_TYPE_DEFAULT = 0;
@@ -30,6 +19,17 @@ public class Constants {
     public final static int DB_TYPE_GREENDAO = 5;
     public final static int DB_TYPE_ACTIVEANDROID = 6;
     public final static int DB_TYPE_DBFLOW = 7;
+
+    public final static ArrayList<DbFactoryModel> DB_LIST = new ArrayList<DbFactoryModel>() {{
+        add(new DbFactoryModel(DB_TYPE_DEFAULT,"Android SQLite","v1.0","Android",true));
+        add(new DbFactoryModel(DB_TYPE_REALM,"Realm","v0.83.3","Realm",true));
+        add(new DbFactoryModel(DB_TYPE_SNAPPY,"SnappyDB","v0.1.0","nhachicha",true));
+        add(new DbFactoryModel(DB_TYPE_ORMLITE,"ORM Lite Android","v4.48","ORM Lite",true));
+        add(new DbFactoryModel(DB_TYPE_SUGARORM,"Sugar ORM","v1.4","Satya Narayan",true));
+        add(new DbFactoryModel(DB_TYPE_GREENDAO,"Green DAO","v1.3","Green DAO",true));
+        add(new DbFactoryModel(DB_TYPE_ACTIVEANDROID,"Active Android","v3.0","Michael Pardo",true));
+        add(new DbFactoryModel(DB_TYPE_DBFLOW,"DBFlow","v2.0.0","Raizlabs",true));
+    }};
 
     public final static String DB_TYPE = "dbType";
 
@@ -56,6 +56,7 @@ public class Constants {
 
     public final static String[] TEST_LIMIT = {"1000", "10000", "100000" };
     public final static int[] TEST_LIMIT_VAL = {1000,10000,100000};
+    public final static Integer[] TEST_LIMIT_VAL_OBJ = {1000,10000,100000};
     public final static String TEST_LIMIT_SELECTED = "selectedTestLimit";
 
     public final static int PERCENT_TOTAL = 24;
@@ -63,4 +64,7 @@ public class Constants {
 
     public final static String SELECTED_DB_TEST = "selectedDb";
     public final static String INTENT_FILTER = "com.koustuvsinha.benchmarker.services.DbTestRunnerService";
+
+    public final static int RESULT_FIRST_DATA = 130;
+    public final static int RESULT_LAST_DATA = 131;
 }

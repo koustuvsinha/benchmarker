@@ -91,30 +91,13 @@ public class BaseActivity extends AppCompatActivity {
                 })
         );
 
-        /*fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                new MaterialDialog.Builder(mContext)
-                        .title("Select Test Limit")
-                        .items(Constants.TEST_LIMIT)
-                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
-
-                            @Override
-                            public boolean onSelection(MaterialDialog materialDialog, View view, int i, CharSequence charSequence) {
-
-                                final Intent intent = new Intent(BaseActivity.this, DbTestingActivity.class);
-                                intent.putExtra(Constants.TEST_LIMIT_SELECTED, Constants.TEST_LIMIT_VAL[i]);
-                                startActivity(intent);
-                                return true;
-                            }
-                        })
-                        .positiveText("Start Testing")
-                        .negativeText("Cancel")
-                        .show();
-
+                final Intent intent = new Intent(BaseActivity.this, DbGraphActivity.class);
+                startActivity(intent);
             }
-        });*/
+        });
 
     }
 

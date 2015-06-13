@@ -106,6 +106,7 @@ public class DbTestRunnerService extends IntentService {
 
         saverModel = new DbResultsSaverModel();
         saverModel.setDbType(dbType);
+        saverModel.setNumRows(numRecords);
         long testTime = System.currentTimeMillis();
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Preparing Test Data");
         prepareData();

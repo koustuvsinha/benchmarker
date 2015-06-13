@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_plus_white_24dp"
+            android:src="@drawable/ic_perf"
             fab:fab_colorNormal="@color/primary"/>
 
 

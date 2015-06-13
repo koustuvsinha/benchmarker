@@ -19,3 +19,4 @@
 -keep class io.realm.** { *; }
 -dontwarn javax.**
 -dontwarn io.realm.**
+-keep class com.github.mikephil.charting.** { *; }
