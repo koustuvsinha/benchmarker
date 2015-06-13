@@ -16,7 +16,9 @@ import com.koustuvsinha.benchmarker.databases.DbRealmHelper;
 import com.koustuvsinha.benchmarker.databases.DbSQLiteHelper;
 import com.koustuvsinha.benchmarker.databases.DbSnappyHelper;
 import com.koustuvsinha.benchmarker.databases.DbTestInterface;
+import com.koustuvsinha.benchmarker.models.DbResultsSaverModel;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
+import com.koustuvsinha.benchmarker.results.DbResultsSaver;
 import com.koustuvsinha.benchmarker.utils.AppUtils;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
@@ -36,6 +38,7 @@ public class DbTestRunnerService extends IntentService {
     private int numRecords;
     private int dbType;
     private DbTestInterface dbTestInterface;
+    private DbResultsSaverModel saverModel;
 
     public DbTestRunnerService() {
         super(Constants.DB_TEST_SERVICE);
@@ -101,6 +104,8 @@ public class DbTestRunnerService extends IntentService {
 
     private void testRunner() {
 
+        saverModel = new DbResultsSaverModel();
+        saverModel.setDbType(dbType);
         long testTime = System.currentTimeMillis();
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Preparing Test Data");
         prepareData();
@@ -127,24 +132,28 @@ public class DbTestRunnerService extends IntentService {
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records took " + insertTime + " ms");
         sendMessage(Constants.RECEIVE_INSERT_TIME,Long.toString(insertTime));
+        saverModel.setInsertTime((int)insertTime);
 
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting reading " + numRecords + " data records from " + dbName);
+        sendMessage(Constants.RECEIVE_STATUS_MSG, "Starting reading " + numRecords + " data records from " + dbName);
         long readTime = testRead(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records took " + readTime + " ms");
         sendMessage(Constants.RECEIVE_READ_TIME, Long.toString(readTime));
+        saverModel.setReadTime((int) readTime);
 
         sendMessage(Constants.RECEIVE_STATUS_MSG, "Starting updating " + numRecords + " data records of " + dbName);
         long updateTime = testUpdate(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Updating of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG, "Updating of " + numRecords + " data records took " + updateTime + " ms");
         sendMessage(Constants.RECEIVE_UPDATE_TIME,Long.toString(updateTime));
+        saverModel.setUpdateTime((int) updateTime);
 
         sendMessage(Constants.RECEIVE_STATUS_MSG, "Starting deleting " + numRecords + " data records");
         long deleteTime = testDelete(dbTestInterface);
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Deleting of " + numRecords + " data records complete");
         sendMessage(Constants.RECEIVE_STATUS_MSG, "Deleting of " + numRecords + " data records took " + deleteTime + " ms");
         sendMessage(Constants.RECEIVE_DELETE_TIME,Long.toString(deleteTime));
+        saverModel.setDeleteTime((int) deleteTime);
 
         cleanData(dbTestInterface);
         testTime = System.currentTimeMillis() - testTime;
@@ -156,7 +165,12 @@ public class DbTestRunnerService extends IntentService {
         NotificationManager mNotificationManager =
                 (NotificationManager) appContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mNotificationManager.notify(AppUtils.getInstance().getNextNotificationId(),mBuilder.build());
+        mNotificationManager.notify(AppUtils.getInstance().getNextNotificationId(), mBuilder.build());
+
+        Log.i(Constants.APP_NAME, "Proceeding to save test data");
+        DbResultsSaver resultsSaver = new DbResultsSaver(appContext);
+        resultsSaver.saveTest(saverModel);
+        Log.i(Constants.APP_NAME, "Saved test data");
 
     }
 
