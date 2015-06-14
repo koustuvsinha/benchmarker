@@ -98,4 +98,36 @@ public class DbResultsSaverModel {
     public void setNumRows(int numRows) {
         this.numRows = numRows;
     }
+
+    public long getInsertOps() {
+        return (long)(((double)numRows/insertTime)*1000);
+    }
+
+    public long getReadOps() {
+        return (long)(((double)numRows/readTime)*1000);
+    }
+
+    public long getUpdateOps() {
+        return (long)(((double)numRows/updateTime)*1000);
+    }
+
+    public long getDeleteOps() {
+        return (long)(((double)numRows/deleteTime)*1000);
+    }
+
+
+    @Override
+    public String toString() {
+        return "DbResultsSaverModel{" +
+                "id=" + id +
+                ", dbType=" + dbType +
+                ", testDate='" + testDate + '\'' +
+                ", testTime='" + testTime + '\'' +
+                ", readTime=" + readTime +
+                ", insertTime=" + insertTime +
+                ", updateTime=" + updateTime +
+                ", deleteTime=" + deleteTime +
+                ", numRows=" + numRows +
+                '}';
+    }
 }

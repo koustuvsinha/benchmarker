@@ -17,9 +17,11 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.koustuvsinha.benchmarker.R;
+import com.koustuvsinha.benchmarker.exceptions.ResultDataNotFoundException;
 import com.koustuvsinha.benchmarker.models.DbFactoryModel;
 import com.koustuvsinha.benchmarker.models.DbResultsSaverModel;
 import com.koustuvsinha.benchmarker.results.DbResultsSaver;
+import com.koustuvsinha.benchmarker.utils.AlertProvider;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
 import java.util.ArrayList;
@@ -57,9 +59,10 @@ public class DbGraphActivity extends AppCompatActivity {
         barChart.setBorderColor(getResources().getColor(R.color.primary_dark));
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(true);
-        barChart.setDescription("");
+        barChart.setDescription("Operations/second");
         barChart.setMaxVisibleValueCount(20);
         barChart.setPinchZoom(false);
+        barChart.setDrawGridBackground(false);
 
         XAxis xl = barChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -80,7 +83,14 @@ public class DbGraphActivity extends AppCompatActivity {
         getSavedData(Constants.RESULT_FIRST_DATA);
 
         setInsertTimes();
-        renderData();
+
+        try {
+            renderData();
+        } catch (ResultDataNotFoundException e) {
+            new AlertProvider(mContext)
+                    .displayErrorMessage("Sorry! No saved result data found!");
+        }
+
         barChart.animateY(2500);
 
         Legend l = barChart.getLegend();
@@ -120,25 +130,25 @@ public class DbGraphActivity extends AppCompatActivity {
         savedData = new ArrayList<>();
         DbResultsSaver resultsSaver = new DbResultsSaver(mContext);
 
+        /*switch(dataType) {
+            case Constants.RESULT_FIRST_DATA :
+                break;
+            case Constants.RESULT_LAST_DATA :
+                break;
+        }*/
+
         Iterator it = Constants.DB_LIST.iterator();
         while(it.hasNext()) {
             DbFactoryModel factoryModel = (DbFactoryModel)it.next();
             DbResultsSaverModel resultsSaverModel = null;
-            switch(dataType) {
-                case Constants.RESULT_FIRST_DATA:
-                    resultsSaverModel = resultsSaver.getFirstTestData(factoryModel.getDbType());
-                    if(resultsSaverModel != null && resultsSaverModel.getId() != 0) {
-                        savedData.add(resultsSaverModel);
-                    }
-                    break;
-                case Constants.RESULT_LAST_DATA:
-                    resultsSaverModel = resultsSaver.getLatestTestData(factoryModel.getDbType());
-                    if(resultsSaverModel != null && resultsSaverModel.getId() != 0) {
-                        savedData.add(resultsSaverModel);
-                    }
-                    break;
+            for(int i=0;i<Constants.TEST_LIMIT_VAL.length;i++) {
+                resultsSaverModel = resultsSaver.getLatestTestData(factoryModel.getDbType(),
+                        Constants.TEST_LIMIT_VAL[i]);
+                if(resultsSaverModel != null && resultsSaverModel.getId() != 0) {
+                    savedData.add(resultsSaverModel);
+                }
+                Log.i(Constants.APP_NAME,"retrieved " + resultsSaverModel.toString());
             }
-
         }
     }
 
@@ -162,25 +172,33 @@ public class DbGraphActivity extends AppCompatActivity {
             }
         }
 
-        Log.i(Constants.APP_NAME, "Value of numRows : " + numRows);
+        Log.i(Constants.APP_NAME, "Value of numRows : " + numRows + ", dbType : " + dbType);
         yVals.get(Arrays.asList(Constants.TEST_LIMIT_VAL_OBJ).indexOf(numRows))
                 .add(new BarEntry(time, dbType));
 
     }
 
-    private void renderData() {
+    private void renderData() throws ResultDataNotFoundException{
+        if(yVals==null) {
+            throw new ResultDataNotFoundException();
+        }
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         for(int i=0;i<Constants.TEST_LIMIT_VAL.length;i++) {
             BarDataSet barDataSet = new BarDataSet(yVals.get(i),"Rows - " + Constants.TEST_LIMIT[i]);
             barDataSet.setBarSpacePercent(35f);
+            if(i==0) { barDataSet.setColor(getResources().getColor(R.color.set1_color)); }
+            if(i==1) { barDataSet.setColor(getResources().getColor(R.color.set2_color)); }
+            if(i==2) { barDataSet.setColor(getResources().getColor(R.color.set3_color)); }
             dataSets.add(barDataSet);
         }
 
 
         BarData barData = new BarData(xVals,dataSets);
+        barData.setGroupSpace(80f);
         barData.setValueTextSize(10f);
 
         barChart.setData(barData);
+        barChart.invalidate();
     }
 
     private void setInsertTimes() {
@@ -188,7 +206,7 @@ public class DbGraphActivity extends AppCompatActivity {
             Iterator it = savedData.iterator();
             while(it.hasNext()) {
                 DbResultsSaverModel saverModel = (DbResultsSaverModel)it.next();
-                setPerfData(saverModel.getDbType(),saverModel.getInsertTime(),saverModel.getNumRows());
+                setPerfData(saverModel.getDbType(),saverModel.getInsertOps(),saverModel.getNumRows());
             }
         }
     }
@@ -198,7 +216,7 @@ public class DbGraphActivity extends AppCompatActivity {
             Iterator it = savedData.iterator();
             while(it.hasNext()) {
                 DbResultsSaverModel saverModel = (DbResultsSaverModel)it.next();
-                setPerfData(saverModel.getDbType(),saverModel.getReadTime(),saverModel.getNumRows());
+                setPerfData(saverModel.getDbType(),saverModel.getReadOps(),saverModel.getNumRows());
             }
         }
     }
@@ -208,7 +226,7 @@ public class DbGraphActivity extends AppCompatActivity {
             Iterator it = savedData.iterator();
             while(it.hasNext()) {
                 DbResultsSaverModel saverModel = (DbResultsSaverModel)it.next();
-                setPerfData(saverModel.getDbType(),saverModel.getUpdateTime(),saverModel.getNumRows());
+                setPerfData(saverModel.getDbType(),saverModel.getUpdateOps(),saverModel.getNumRows());
             }
         }
     }
@@ -218,7 +236,7 @@ public class DbGraphActivity extends AppCompatActivity {
             Iterator it = savedData.iterator();
             while(it.hasNext()) {
                 DbResultsSaverModel saverModel = (DbResultsSaverModel)it.next();
-                setPerfData(saverModel.getDbType(),saverModel.getDeleteTime(),saverModel.getNumRows());
+                setPerfData(saverModel.getDbType(),saverModel.getDeleteOps(),saverModel.getNumRows());
             }
         }
     }

@@ -10,4 +10,7 @@
     <color name="divider">#B6B6B6</color>
     <color name="pink">#e91e63</color>
     <color name="pink_pressed">#ec407a</color>
+    <color name="set1_color">#FF5722</color>
+    <color name="set2_color">#2196F3</color>
+    <color name="set3_color">#4CAF50</color>
 </resources>

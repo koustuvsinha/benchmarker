@@ -92,16 +92,17 @@ public class DbResultsSaver extends SQLiteOpenHelper {
         closeDb();
     }
 
-    public DbResultsSaverModel getFirstTestData(int dbType) {
+    public DbResultsSaverModel getFirstTestData(int dbType,int numRows) {
 
         openDb(Constants.DB_MODE_READ);
         Cursor cursor = db.rawQuery("select * from "
                 + TABLE_SAVE
                 + " where "
                 + COLUMN_DB_TYPE + " = ? "
-                + "and " + COLUMN_ID
-                +  " = (select min(" + COLUMN_ID + ") from "
-                + TABLE_SAVE + ")",new String[] {Integer.toString(dbType)});
+                + "and " + COLUMN_NUM_ROWS + " = ? "
+                + "order by " + COLUMN_ID
+                + " asc limit 1",
+                new String[] {Integer.toString(dbType),Integer.toString(numRows)});
 
 
         DbResultsSaverModel sv = extractFromCursor(cursor);
@@ -109,16 +110,17 @@ public class DbResultsSaver extends SQLiteOpenHelper {
         return sv;
     }
 
-    public DbResultsSaverModel getLatestTestData(int dbType) {
-
+    public DbResultsSaverModel getLatestTestData(int dbType,int numRows) {
+        Log.i(Constants.APP_NAME,"numRows received - " + numRows);
         openDb(Constants.DB_MODE_READ);
         Cursor cursor = db.rawQuery("select * from "
                 + TABLE_SAVE
                 + " where "
                 + COLUMN_DB_TYPE + " = ? "
-                + "and " + COLUMN_ID
-                +  " = (select max(" + COLUMN_ID + ") from "
-                + TABLE_SAVE + ")",new String[]{Integer.toString(dbType)});
+                + "and " + COLUMN_NUM_ROWS + " = ? "
+                + "order by " + COLUMN_ID
+                + " desc limit 1",
+                new String[]{Integer.toString(dbType),Integer.toString(numRows)});
 
 
         DbResultsSaverModel sv = extractFromCursor(cursor);
@@ -145,6 +147,7 @@ public class DbResultsSaver extends SQLiteOpenHelper {
     private DbResultsSaverModel extractFromCursor(Cursor cursor) {
 
         DbResultsSaverModel saverModel = new DbResultsSaverModel();
+        Log.i(Constants.APP_NAME,"Cursor - " + cursor.getCount());
         if(cursor!=null && cursor.getCount() == 1) {
             cursor.moveToFirst();
             saverModel.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_ID)));
