@@ -10,11 +10,10 @@ import android.util.Log;
 import com.koustuvsinha.benchmarker.models.DbResultsSaverModel;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
-
-import java.util.ArrayList;
-
 /**
- * Created by koustuv on 13/6/15.
+ * Created by koustuvsinha on 13/6/15.
+ * DbResultsSaver class to save and retrieve the results of performance testings
+ * Used SQLite for better handling of complex queries
  */
 public class DbResultsSaver extends SQLiteOpenHelper {
     private Context mContext;
@@ -68,6 +67,7 @@ public class DbResultsSaver extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    
     public void saveTest(DbResultsSaverModel saverModel) {
 
         openDb(Constants.DB_MODE_WRITE);

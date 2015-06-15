@@ -1,11 +1,7 @@
 package com.koustuvsinha.benchmarker.models;
 
-import android.text.format.Time;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by koustuv on 30/5/15.

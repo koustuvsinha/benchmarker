@@ -1,9 +1,8 @@
 package com.koustuvsinha.benchmarker.utils;
 
-import java.util.Random;
-
 /**
- * Created by koustuv on 8/6/15.
+ * Created by koustuvsinha on 8/6/15.
+ * Utility class for the app
  */
 public class AppUtils {
 
@@ -27,6 +26,10 @@ public class AppUtils {
         return instance;
     }
 
+    /**
+     * Return a new notification id for the Notification Builder
+     * @return
+     */
     public int getNextNotificationId() {
         return ++ notificationId;
     }

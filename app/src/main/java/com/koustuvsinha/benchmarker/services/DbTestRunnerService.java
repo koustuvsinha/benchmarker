@@ -5,8 +5,6 @@ import android.app.IntentService;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -29,7 +27,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by koustuv on 28/5/15.
+ * Created by koustuvsinha on 28/5/15.
+ * DbTestRunnerService is the main service which runs the testing process
  */
 public class DbTestRunnerService extends IntentService {
 
@@ -44,6 +43,10 @@ public class DbTestRunnerService extends IntentService {
         super(Constants.DB_TEST_SERVICE);
     }
 
+    /**
+     * Method to generate mock data for insertion
+     * Uses third party library https://github.com/andygibson/datafactory
+     */
     private void prepareData() {
 
         int num = numRecords;
@@ -60,6 +63,11 @@ public class DbTestRunnerService extends IntentService {
         }
     }
 
+    /**
+     * Method to calculate the running time of insert operation
+     * @param testInterface the database instance to test
+     * @return the time taken to test
+     */
     private long testInsert(DbTestInterface testInterface) {
         long startTime = System.currentTimeMillis();
 
@@ -70,6 +78,11 @@ public class DbTestRunnerService extends IntentService {
         return endTime - startTime;
     }
 
+    /**
+     * Method to calculate the running time of read operation
+     * @param testInterface the database instance to test
+     * @return the time taken to test
+     */
     private long testRead(DbTestInterface testInterface) {
         long startTime = System.currentTimeMillis();
 
@@ -81,6 +94,11 @@ public class DbTestRunnerService extends IntentService {
 
     }
 
+    /**
+     * Method to calculate the running time of update operation
+     * @param testInterface the database instance to test
+     * @return the time taken to test
+     */
     private long testUpdate(DbTestInterface testInterface) {
         long startTime = System.currentTimeMillis();
         testInterface.updateData();
@@ -89,6 +107,11 @@ public class DbTestRunnerService extends IntentService {
         return endTime - startTime;
     }
 
+    /**
+     * Method to calculate the running time of delete operation
+     * @param testInterface the database instance to test
+     * @return the time taken to test
+     */
     private long testDelete(DbTestInterface testInterface) {
         long startTime = System.currentTimeMillis();
         testInterface.deleteAllData();
@@ -97,11 +120,20 @@ public class DbTestRunnerService extends IntentService {
         return endTime - startTime;
     }
 
+    /**
+     * Method to clean the database file after testing is over
+     * @param testInterface the database instance to test
+     */
     private void cleanData(DbTestInterface testInterface) {
         testInterface.removeDbFile();
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Cleaned database file");
+        sendMessage(Constants.RECEIVE_STATUS_MSG, "Cleaned database file");
     }
 
+    /**
+     * Method to orchestrate the testing process
+     * After testing is over, put a Notification that the testing is over
+     * including the total time taken to test
+     */
     private void testRunner() {
 
         saverModel = new DbResultsSaverModel();
@@ -175,8 +207,11 @@ public class DbTestRunnerService extends IntentService {
 
     }
 
-    /*
-     * Message to send status messages and results
+    /**
+     * Method to send status messages and results back to Activity
+     * by using LocalBroadCastManager
+     * @param messageType defines the type of Message
+     * @param message defines the body of the Message
      */
     private void sendMessage(int messageType, String message) {
         Log.i(Constants.APP_NAME, message);
@@ -204,6 +239,10 @@ public class DbTestRunnerService extends IntentService {
         }
     }
 
+    /**
+     * Method to handle the intent received from Activity
+     * @param intent
+     */
     @Override
     protected void onHandleIntent(Intent intent) {
 

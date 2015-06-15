@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.koustuvsinha.benchmarker.models.DbRealmTestRecordModel;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
-import com.koustuvsinha.benchmarker.utils.AppUtils;
 
 import java.util.Iterator;
 import java.util.List;

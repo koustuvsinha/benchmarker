@@ -1,6 +1,5 @@
 package com.koustuvsinha.benchmarker.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,15 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 import com.crashlytics.android.Crashlytics;
 import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbListAdaptor;
@@ -26,7 +22,9 @@ import com.melnykov.fab.FloatingActionButton;
 
 import io.fabric.sdk.android.Fabric;
 
-
+/**
+ * Activity of the landing page
+ */
 public class BaseActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;

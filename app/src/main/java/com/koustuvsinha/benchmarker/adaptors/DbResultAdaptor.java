@@ -12,7 +12,8 @@ import com.koustuvsinha.benchmarker.models.DbResultModel;
 import java.util.ArrayList;
 
 /**
- * Created by koustuv on 30/5/15.
+ * Created by koustuvsinha on 30/5/15.
+ * DbResultAdaptor class is an Adaptor used in the Logs view RecyclerView
  */
 public class DbResultAdaptor extends RecyclerView.Adapter<DbResultAdaptor.ViewHolder> {
 

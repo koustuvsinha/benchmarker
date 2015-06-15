@@ -3,7 +3,8 @@ package com.koustuvsinha.benchmarker.utils;
 import com.squareup.otto.Bus;
 
 /**
- * Created by koustuv on 5/6/15.
+ * Created by koustuvsinha on 5/6/15.
+ * Singleton class to provide the Bus instance of Otto
  */
 public class BusProvider {
 

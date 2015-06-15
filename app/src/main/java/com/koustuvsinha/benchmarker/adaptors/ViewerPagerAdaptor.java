@@ -10,7 +10,9 @@ import com.koustuvsinha.benchmarker.views.DbTestResultStatus;
 import java.util.ArrayList;
 
 /**
- * Created by koustuv on 5/6/15.
+ * Created by koustuvsinha on 5/6/15.
+ * ViewerPagerAdaptor class is a FragmentPagerAdaptor to manage the fragments
+ * of the Result Activity
  */
 public class ViewerPagerAdaptor extends FragmentPagerAdapter {
     private final ArrayList<Fragment> fragments;

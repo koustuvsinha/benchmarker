@@ -10,12 +10,16 @@ import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
 /**
- * Created by koustuv on 26/5/15.
+ * Created by koustuvsinha on 26/5/15.
+ * DbListAdaptor class is an Adaptor to display the names of DB in the landing page
+ * Uses RecyclerView adaptor
  */
 public class DbListAdaptor extends RecyclerView.Adapter<DbListAdaptor.ViewHolder> {
 
+    /**
+     * RecyclerView Holder method for Adaptor to set the TextViews
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public TextView dbNameView;
         public TextView dbVersionView;
         public ViewHolder(View v) {
@@ -40,6 +44,10 @@ public class DbListAdaptor extends RecyclerView.Adapter<DbListAdaptor.ViewHolder
         viewHolder.dbVersionView.setText(Constants.DB_LIST.get(i).getDbVersion());
     }
 
+    /**
+     * Get the count of db items in ArrayList
+     * @return DB ArrayList size
+     */
     @Override
     public int getItemCount() {
         return Constants.DB_LIST.size();

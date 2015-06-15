@@ -26,12 +26,12 @@ import com.koustuvsinha.benchmarker.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by koustuv on 13/6/15.
+ * Created by koustuvsinha on 13/6/15.
+ * Activity of the Graph display page
  */
 public class DbGraphActivity extends AppCompatActivity {
 

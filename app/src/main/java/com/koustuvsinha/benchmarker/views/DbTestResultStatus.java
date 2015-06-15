@@ -1,15 +1,11 @@
 package com.koustuvsinha.benchmarker.views;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;

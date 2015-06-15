@@ -1,17 +1,15 @@
 package com.koustuvsinha.benchmarker.views;
 
-import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,7 +27,9 @@ import com.koustuvsinha.benchmarker.utils.Constants;
 import java.io.File;
 import java.util.ArrayList;
 
-
+/**
+ * Activity of the Testing phase
+ */
 public class DbTestingActivity extends AppCompatActivity implements DbTestResultDetails.OnFragmentInteractionListener,DbTestResultStatus.OnFragmentInteractionListener {
 
     private int numRecords;

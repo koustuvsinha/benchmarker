@@ -1,8 +1,5 @@
 package com.koustuvsinha.benchmarker.models;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 

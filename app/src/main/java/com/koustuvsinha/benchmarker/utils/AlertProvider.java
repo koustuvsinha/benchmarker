@@ -5,7 +5,8 @@ import android.content.Context;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 /**
- * Created by koustuv on 14/6/15.
+ * Created by koustuvsinha on 14/6/15.
+ * Class to provide a common platform to display alert messages
  */
 public class AlertProvider {
     private Context mContext;
@@ -14,6 +15,10 @@ public class AlertProvider {
         this.mContext = mContext;
     }
 
+    /**
+     * Method to display error message in a dialog
+     * @param message
+     */
     public void displayErrorMessage(String message) {
         new MaterialDialog.Builder(mContext)
                 .title("Oops!")
