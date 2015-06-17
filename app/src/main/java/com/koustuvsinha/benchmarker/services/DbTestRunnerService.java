@@ -38,6 +38,7 @@ public class DbTestRunnerService extends IntentService {
     private int dbType;
     private DbTestInterface dbTestInterface;
     private DbResultsSaverModel saverModel;
+    private DbResultsSaver resultsSaver;
 
     public DbTestRunnerService() {
         super(Constants.DB_TEST_SERVICE);
@@ -160,33 +161,10 @@ public class DbTestRunnerService extends IntentService {
 
         String dbName = Constants.DB_LIST.get(dbType).getDbName();
 
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting inserting " + numRecords + " data records into " + dbName);
-        long insertTime = testInsert(dbTestInterface);
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records complete");
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Insertion of " + numRecords + " data records took " + insertTime + " ms");
-        sendMessage(Constants.RECEIVE_INSERT_TIME,Long.toString(insertTime));
-        saverModel.setInsertTime((int)insertTime);
-
-        sendMessage(Constants.RECEIVE_STATUS_MSG, "Starting reading " + numRecords + " data records from " + dbName);
-        long readTime = testRead(dbTestInterface);
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records complete");
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Reading of " + numRecords + " data records took " + readTime + " ms");
-        sendMessage(Constants.RECEIVE_READ_TIME, Long.toString(readTime));
-        saverModel.setReadTime((int) readTime);
-
-        sendMessage(Constants.RECEIVE_STATUS_MSG, "Starting updating " + numRecords + " data records of " + dbName);
-        long updateTime = testUpdate(dbTestInterface);
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Updating of " + numRecords + " data records complete");
-        sendMessage(Constants.RECEIVE_STATUS_MSG, "Updating of " + numRecords + " data records took " + updateTime + " ms");
-        sendMessage(Constants.RECEIVE_UPDATE_TIME,Long.toString(updateTime));
-        saverModel.setUpdateTime((int) updateTime);
-
-        sendMessage(Constants.RECEIVE_STATUS_MSG, "Starting deleting " + numRecords + " data records");
-        long deleteTime = testDelete(dbTestInterface);
-        sendMessage(Constants.RECEIVE_STATUS_MSG,"Deleting of " + numRecords + " data records complete");
-        sendMessage(Constants.RECEIVE_STATUS_MSG, "Deleting of " + numRecords + " data records took " + deleteTime + " ms");
-        sendMessage(Constants.RECEIVE_DELETE_TIME,Long.toString(deleteTime));
-        saverModel.setDeleteTime((int) deleteTime);
+        executeTest(Constants.DB_TEST_NAME_INSERT,Constants.DB_TEST_TYPE_INSERT,dbName);
+        executeTest(Constants.DB_TEST_NAME_READ,Constants.DB_TEST_TYPE_READ,dbName);
+        executeTest(Constants.DB_TEST_NAME_UPDATE,Constants.DB_TEST_TYPE_UPDATE,dbName);
+        executeTest(Constants.DB_TEST_NAME_DELETE,Constants.DB_TEST_TYPE_DELETE,dbName);
 
         cleanData(dbTestInterface);
         testTime = System.currentTimeMillis() - testTime;
@@ -201,10 +179,53 @@ public class DbTestRunnerService extends IntentService {
         mNotificationManager.notify(AppUtils.getInstance().getNextNotificationId(), mBuilder.build());
 
         Log.i(Constants.APP_NAME, "Proceeding to save test data");
-        DbResultsSaver resultsSaver = new DbResultsSaver(appContext);
+
+    }
+
+    /**
+     * Method to execute individual test,send the results back and save them
+     * @param testName name of the test taken
+     * @param testType type of the test taken
+     * @param dbName name of the db
+     */
+    private void executeTest(String testName,int testType, String dbName) {
+
+        resultsSaver = new DbResultsSaver(appContext);
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Starting test : " + testName
+                + ", Records : " + numRecords
+                + ", DB :  " + dbName);
+        long testTime = 0;
+        int receive_flag = 0;
+        switch(testType) {
+            case Constants.DB_TEST_TYPE_INSERT :
+                testTime = testInsert(dbTestInterface);
+                receive_flag = Constants.RECEIVE_INSERT_TIME;
+                break;
+            case Constants.DB_TEST_TYPE_READ :
+                testTime = testRead(dbTestInterface);
+                receive_flag = Constants.RECEIVE_READ_TIME;
+                break;
+            case Constants.DB_TEST_TYPE_UPDATE :
+                testTime = testUpdate(dbTestInterface);
+                receive_flag = Constants.RECEIVE_UPDATE_TIME;
+                break;
+            case Constants.DB_TEST_TYPE_DELETE :
+                testTime = testDelete(dbTestInterface);
+                receive_flag = Constants.RECEIVE_DELETE_TIME;
+                break;
+            default:
+                break;
+        }
+
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Done Test : " + testName + ", Records : " + numRecords);
+        sendMessage(Constants.RECEIVE_STATUS_MSG,"Time taken by " + numRecords + " data records : " + testTime + " ms");
+        sendMessage(receive_flag, Long.toString(testTime));
+
+        saverModel.setTestType(Constants.DB_TEST_TYPE_INSERT);
+        saverModel.setTestTime(testTime);
         resultsSaver.saveTest(saverModel);
         Log.i(Constants.APP_NAME, "Saved test data");
-
+        
     }
 
     /**

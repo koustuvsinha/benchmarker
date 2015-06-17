@@ -13,18 +13,14 @@ public class DbResultsSaverModel {
     private long id;
     private int dbType;
     private String testDate;
-    private String testTime;
-    private int readTime;
-    private int insertTime;
-    private int updateTime;
-    private int deleteTime;
+    private long testTime;
+    private int testType;
     private int numRows;
 
     public DbResultsSaverModel() {
         Date date = Calendar.getInstance().getTime();
         this.id = 0;
         this.testDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date);
-        this.testTime = new SimpleDateFormat("hh:mm",Locale.ENGLISH).format(date);
     }
 
     public long getId() {
@@ -51,44 +47,20 @@ public class DbResultsSaverModel {
         this.testDate = testDate;
     }
 
-    public String getTestTime() {
+    public long getTestTime() {
         return testTime;
     }
 
-    public void setTestTime(String testTime) {
+    public void setTestTime(long testTime) {
         this.testTime = testTime;
     }
 
-    public int getReadTime() {
-        return readTime;
+    public int getTestType() {
+        return testType;
     }
 
-    public void setReadTime(int readTime) {
-        this.readTime = readTime;
-    }
-
-    public int getInsertTime() {
-        return insertTime;
-    }
-
-    public void setInsertTime(int insertTime) {
-        this.insertTime = insertTime;
-    }
-
-    public int getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(int updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public int getDeleteTime() {
-        return deleteTime;
-    }
-
-    public void setDeleteTime(int deleteTime) {
-        this.deleteTime = deleteTime;
+    public void setTestType(int testType) {
+        this.testType = testType;
     }
 
     public int getNumRows() {
@@ -99,22 +71,9 @@ public class DbResultsSaverModel {
         this.numRows = numRows;
     }
 
-    public long getInsertOps() {
-        return (long)(((double)numRows/insertTime)*1000);
+    public long getTimeOps() {
+        return (long)(((double)numRows/testTime)*1000);
     }
-
-    public long getReadOps() {
-        return (long)(((double)numRows/readTime)*1000);
-    }
-
-    public long getUpdateOps() {
-        return (long)(((double)numRows/updateTime)*1000);
-    }
-
-    public long getDeleteOps() {
-        return (long)(((double)numRows/deleteTime)*1000);
-    }
-
 
     @Override
     public String toString() {
@@ -123,10 +82,7 @@ public class DbResultsSaverModel {
                 ", dbType=" + dbType +
                 ", testDate='" + testDate + '\'' +
                 ", testTime='" + testTime + '\'' +
-                ", readTime=" + readTime +
-                ", insertTime=" + insertTime +
-                ", updateTime=" + updateTime +
-                ", deleteTime=" + deleteTime +
+                ", testType=" + testType +
                 ", numRows=" + numRows +
                 '}';
     }

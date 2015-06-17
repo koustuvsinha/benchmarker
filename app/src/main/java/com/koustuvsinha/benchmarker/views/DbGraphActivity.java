@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -22,6 +24,7 @@ import com.koustuvsinha.benchmarker.models.DbFactoryModel;
 import com.koustuvsinha.benchmarker.models.DbResultsSaverModel;
 import com.koustuvsinha.benchmarker.results.DbResultsSaver;
 import com.koustuvsinha.benchmarker.utils.AlertProvider;
+import com.koustuvsinha.benchmarker.utils.AppUtils;
 import com.koustuvsinha.benchmarker.utils.Constants;
 
 import java.util.ArrayList;
@@ -42,6 +45,8 @@ public class DbGraphActivity extends AppCompatActivity {
     private List<DbResultsSaverModel> savedData;
     private List<String> xVals;
     private List<List<BarEntry>> yVals;
+    private int reportTestType;
+    private List<DbFactoryModel> dbList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +84,9 @@ public class DbGraphActivity extends AppCompatActivity {
         yr.setDrawAxisLine(true);
         yr.setDrawGridLines(false);
 
-        prepareChartColumnNames();
-        getSavedData(Constants.RESULT_FIRST_DATA);
-
-        setInsertTimes();
+        reportTestType = Constants.DB_TEST_TYPE_INSERT;
+        getSavedData(Constants.TEST_LIMIT_VAL[0]);
+        setTestTimes();
 
         try {
             renderData();
@@ -125,40 +129,35 @@ public class DbGraphActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getSavedData(int dataType) {
+    private void getSavedData(int numRows) {
 
         savedData = new ArrayList<>();
         DbResultsSaver resultsSaver = new DbResultsSaver(mContext);
-
-        /*switch(dataType) {
-            case Constants.RESULT_FIRST_DATA :
-                break;
-            case Constants.RESULT_LAST_DATA :
-                break;
-        }*/
 
         Iterator it = Constants.DB_LIST.iterator();
         while(it.hasNext()) {
             DbFactoryModel factoryModel = (DbFactoryModel)it.next();
             DbResultsSaverModel resultsSaverModel = null;
-            for(int i=0;i<Constants.TEST_LIMIT_VAL.length;i++) {
-                resultsSaverModel = resultsSaver.getLatestTestData(factoryModel.getDbType(),
-                        Constants.TEST_LIMIT_VAL[i]);
-                if(resultsSaverModel != null && resultsSaverModel.getId() != 0) {
-                    savedData.add(resultsSaverModel);
-                }
-                Log.i(Constants.APP_NAME,"retrieved " + resultsSaverModel.toString());
+
+            resultsSaverModel = resultsSaver.getLatestTestData(factoryModel.getDbType(),
+                    numRows,reportTestType);
+            if(resultsSaverModel != null && resultsSaverModel.getId() != 0) {
+                savedData.add(resultsSaverModel);
+                Log.i(Constants.APP_NAME, "retrieved " + resultsSaverModel.toString());
             }
+
         }
     }
 
     private void prepareChartColumnNames() {
         xVals = new ArrayList<String>();
 
-        Iterator it = Constants.DB_LIST.iterator();
+        Iterator it = dbList.iterator();
+        int count = 0;
         while(it.hasNext()) {
-            DbFactoryModel dbFactoryModel = (DbFactoryModel)it.next();
-            xVals.add(dbFactoryModel.getDbName());
+            count++;
+            xVals.add("");
+            it.next();
         }
 
     }
@@ -166,29 +165,31 @@ public class DbGraphActivity extends AppCompatActivity {
     private void setPerfData(int dbType,long time,int numRows) {
 
         if(yVals == null) {
-            yVals = new ArrayList<>(Constants.TEST_LIMIT_VAL.length);
-            for(int i=0;i<Constants.TEST_LIMIT_VAL.length;i++) {
-                yVals.add(i,new ArrayList<BarEntry>());
-            }
+            yVals = new ArrayList<>(Constants.DB_LIST.size());
+            dbList = new ArrayList<>();
         }
 
-        Log.i(Constants.APP_NAME, "Value of numRows : " + numRows + ", dbType : " + dbType);
-        yVals.get(Arrays.asList(Constants.TEST_LIMIT_VAL_OBJ).indexOf(numRows))
-                .add(new BarEntry(time, dbType));
-
+        BarEntry barEntry = new BarEntry(time, dbType);
+        ArrayList<BarEntry> barEntryVal = new ArrayList<BarEntry>();
+        barEntryVal.add(barEntry);
+        yVals.add(barEntryVal);
+        dbList.add(AppUtils.getInstance().getDbListItem(dbType));
     }
 
     private void renderData() throws ResultDataNotFoundException{
+        prepareChartColumnNames();
         if(yVals==null) {
             throw new ResultDataNotFoundException();
         }
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
-        for(int i=0;i<Constants.TEST_LIMIT_VAL.length;i++) {
-            BarDataSet barDataSet = new BarDataSet(yVals.get(i),"Rows - " + Constants.TEST_LIMIT[i]);
+        Iterator it = dbList.iterator();
+        while(it.hasNext()) {
+            DbFactoryModel factoryModel = (DbFactoryModel)it.next();
+            BarDataSet barDataSet = new BarDataSet(
+                    yVals.get(factoryModel.getDbType()),
+                    factoryModel.getDbName());
             barDataSet.setBarSpacePercent(35f);
-            if(i==0) { barDataSet.setColor(getResources().getColor(R.color.set1_color)); }
-            if(i==1) { barDataSet.setColor(getResources().getColor(R.color.set2_color)); }
-            if(i==2) { barDataSet.setColor(getResources().getColor(R.color.set3_color)); }
+            barDataSet.setColor(getResources().getColor(factoryModel.getChartColor()));
             dataSets.add(barDataSet);
         }
 
@@ -201,43 +202,39 @@ public class DbGraphActivity extends AppCompatActivity {
         barChart.invalidate();
     }
 
-    private void setInsertTimes() {
+    private void setTestTimes() {
         if(savedData!=null) {
+            yVals = null;
+            dbList = null;
             Iterator it = savedData.iterator();
             while(it.hasNext()) {
                 DbResultsSaverModel saverModel = (DbResultsSaverModel)it.next();
-                setPerfData(saverModel.getDbType(),saverModel.getInsertOps(),saverModel.getNumRows());
+                setPerfData(saverModel.getDbType(),saverModel.getTimeOps(),saverModel.getNumRows());
             }
         }
     }
 
-    private void setReadTimes() {
-        if(savedData!=null) {
-            Iterator it = savedData.iterator();
-            while(it.hasNext()) {
-                DbResultsSaverModel saverModel = (DbResultsSaverModel)it.next();
-                setPerfData(saverModel.getDbType(),saverModel.getReadOps(),saverModel.getNumRows());
-            }
-        }
-    }
-
-    private void setUpdateTimes() {
-        if(savedData!=null) {
-            Iterator it = savedData.iterator();
-            while(it.hasNext()) {
-                DbResultsSaverModel saverModel = (DbResultsSaverModel)it.next();
-                setPerfData(saverModel.getDbType(),saverModel.getUpdateOps(),saverModel.getNumRows());
-            }
-        }
-    }
-
-    private void setDeleteTimes() {
-        if(savedData!=null) {
-            Iterator it = savedData.iterator();
-            while(it.hasNext()) {
-                DbResultsSaverModel saverModel = (DbResultsSaverModel)it.next();
-                setPerfData(saverModel.getDbType(),saverModel.getDeleteOps(),saverModel.getNumRows());
-            }
+    public void onRowsSelect(View view) {
+        boolean checked = ((RadioButton)view).isChecked();
+        switch (view.getId()) {
+            case R.id.rowsGroup1 :
+                if(checked) {
+                    getSavedData(Constants.TEST_LIMIT_VAL[0]);
+                    setTestTimes();
+                }
+                break;
+            case R.id.rowsGroup2 :
+                if(checked) {
+                    getSavedData(Constants.TEST_LIMIT_VAL[1]);
+                    setTestTimes();
+                }
+                break;
+            case R.id.rowsGroup3 :
+                if(checked) {
+                    getSavedData(Constants.TEST_LIMIT_VAL[2]);
+                    setTestTimes();
+                }
+                break;
         }
     }
 

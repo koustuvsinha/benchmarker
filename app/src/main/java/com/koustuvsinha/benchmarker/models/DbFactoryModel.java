@@ -9,13 +9,15 @@ public class DbFactoryModel {
     private String dbVersion;
     private String dbOwner;
     private boolean openSourced;
+    private int chartColor;
 
-    public DbFactoryModel(int dbType,String dbName, String dbVersion, String dbOwner, boolean openSourced) {
+    public DbFactoryModel(int dbType,String dbName, String dbVersion, String dbOwner, boolean openSourced, int chartColor) {
         this.dbType = dbType;
         this.dbName = dbName;
         this.dbVersion = dbVersion;
         this.dbOwner = dbOwner;
         this.openSourced = openSourced;
+        this.chartColor = chartColor;
     }
 
     public int getDbType() {
@@ -56,5 +58,13 @@ public class DbFactoryModel {
 
     public void setOpenSourced(boolean openSourced) {
         this.openSourced = openSourced;
+    }
+
+    public int getChartColor() {
+        return chartColor;
+    }
+
+    public void setChartColor(int chartColor) {
+        this.chartColor = chartColor;
     }
 }

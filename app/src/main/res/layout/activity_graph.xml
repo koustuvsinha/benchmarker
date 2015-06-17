@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
@@ -34,10 +35,41 @@
                     android:text="Comparision"
                     android:textSize="@dimen/abc_text_size_headline_material"/>
 
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/rowsGroup">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1000 Rows"
+                        android:id="@+id/rowsGroup1"
+                        android:onClick="onRowsSelect"/>
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10,000 Rows"
+                        android:id="@+id/rowsGroup2"
+                        android:onClick="onRowsSelect"/>
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1,00,000 Rows"
+                        android:id="@+id/rowsGroup3"
+                        android:onClick="onRowsSelect"/>
+
+                </RadioGroup>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
                     android:layout_below="@id/graphHeader"
+                    android:layout_above="@id/rowsGroup"
                     android:layout_marginTop="5dp">
 
                     <com.github.mikephil.charting.charts.HorizontalBarChart

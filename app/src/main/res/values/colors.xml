@@ -13,4 +13,13 @@
     <color name="set1_color">#FF5722</color>
     <color name="set2_color">#2196F3</color>
     <color name="set3_color">#4CAF50</color>
+    <color name="db_android_sqlite">#4CAF50</color>
+    <color name="db_realm">#795548</color>
+    <color name="db_snappy">#FFEB3B</color>
+    <color name="db_orm_lite">#2196F3</color>
+    <color name="db_sugar_orm">#E91E63</color>
+    <color name="db_green_dao">#388E3C</color>
+    <color name="db_active_android">#9C27B0</color>
+    <color name="db_dbflow">#FF5722</color>
+
 </resources>
