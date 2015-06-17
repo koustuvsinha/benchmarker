@@ -47,6 +47,7 @@ public class DbGraphActivity extends AppCompatActivity {
     private List<List<BarEntry>> yVals;
     private int reportTestType;
     private List<DbFactoryModel> dbList;
+    private RadioButton defaultChoice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +96,6 @@ public class DbGraphActivity extends AppCompatActivity {
                     .displayErrorMessage("Sorry! No saved result data found!");
         }
 
-        barChart.animateY(2500);
-
         Legend l = barChart.getLegend();
         l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
         l.setFormSize(8f);
@@ -104,6 +103,9 @@ public class DbGraphActivity extends AppCompatActivity {
 
         graphHeader = (TextView)findViewById(R.id.graphHeader);
         graphHeader.setText("Comparision - Insert");
+
+        defaultChoice = (RadioButton)findViewById(R.id.rowsGroup1);
+        defaultChoice.setChecked(true);
 
     }
 
@@ -151,13 +153,14 @@ public class DbGraphActivity extends AppCompatActivity {
 
     private void prepareChartColumnNames() {
         xVals = new ArrayList<String>();
-
-        Iterator it = dbList.iterator();
-        int count = 0;
-        while(it.hasNext()) {
-            count++;
-            xVals.add("");
-            it.next();
+        if(dbList!=null) {
+            Iterator it = dbList.iterator();
+            int count = 0;
+            while (it.hasNext()) {
+                count++;
+                xVals.add("");
+                it.next();
+            }
         }
 
     }
@@ -200,6 +203,8 @@ public class DbGraphActivity extends AppCompatActivity {
 
         barChart.setData(barData);
         barChart.invalidate();
+        barChart.notifyDataSetChanged();
+        barChart.animateY(2500);
     }
 
     private void setTestTimes() {
@@ -220,21 +225,27 @@ public class DbGraphActivity extends AppCompatActivity {
             case R.id.rowsGroup1 :
                 if(checked) {
                     getSavedData(Constants.TEST_LIMIT_VAL[0]);
-                    setTestTimes();
                 }
                 break;
             case R.id.rowsGroup2 :
                 if(checked) {
                     getSavedData(Constants.TEST_LIMIT_VAL[1]);
-                    setTestTimes();
                 }
                 break;
             case R.id.rowsGroup3 :
                 if(checked) {
                     getSavedData(Constants.TEST_LIMIT_VAL[2]);
-                    setTestTimes();
                 }
                 break;
+        }
+
+        setTestTimes();
+
+        try {
+            renderData();
+        } catch (ResultDataNotFoundException e) {
+            new AlertProvider(mContext)
+                    .displayErrorMessage("Sorry! No saved result data found!");
         }
     }
 

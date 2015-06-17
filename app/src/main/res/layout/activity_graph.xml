@@ -45,31 +45,38 @@
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1000 Rows"
+                        android:text="1000"
                         android:id="@+id/rowsGroup1"
                         android:onClick="onRowsSelect"/>
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="10,000 Rows"
+                        android:text="10,000"
                         android:id="@+id/rowsGroup2"
                         android:onClick="onRowsSelect"/>
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1,00,000 Rows"
+                        android:text="1,00,000"
                         android:id="@+id/rowsGroup3"
                         android:onClick="onRowsSelect"/>
 
                 </RadioGroup>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/selectRowsText"
+                    android:text="Select Rows"
+                    android:layout_above="@id/rowsGroup"/>
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
                     android:layout_below="@id/graphHeader"
-                    android:layout_above="@id/rowsGroup"
+                    android:layout_above="@id/selectRowsText"
                     android:layout_marginTop="5dp">
 
                     <com.github.mikephil.charting.charts.HorizontalBarChart
