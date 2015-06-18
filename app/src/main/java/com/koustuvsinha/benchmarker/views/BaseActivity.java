@@ -18,6 +18,7 @@ import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbListAdaptor;
 import com.koustuvsinha.benchmarker.listeners.DbItemClickListener;
 import com.koustuvsinha.benchmarker.utils.Constants;
+import com.koustuvsinha.benchmarker.utils.DividerItemDecoration;
 import com.melnykov.fab.FloatingActionButton;
 
 import io.fabric.sdk.android.Fabric;
@@ -53,6 +54,9 @@ public class BaseActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new DbListAdaptor();
         mRecyclerView.setAdapter(mAdapter);
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        mRecyclerView.addItemDecoration(itemDecoration);
 
         mRecyclerView.addOnItemTouchListener(
                 new DbItemClickListener(this, new DbItemClickListener.OnItemClickListener() {
