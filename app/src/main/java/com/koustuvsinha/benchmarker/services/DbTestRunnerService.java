@@ -221,8 +221,8 @@ public class DbTestRunnerService extends IntentService {
         sendMessage(Constants.RECEIVE_STATUS_MSG,"Time taken by " + numRecords + " data records : " + testTime + " ms");
         sendMessage(receive_flag, Long.toString(testTime));
 
-        saverModel.setTestType(Constants.DB_TEST_TYPE_INSERT);
         saverModel.setTestTime(testTime);
+        saverModel.setTestType(testType);
         resultsSaver.saveTest(saverModel);
         Log.i(Constants.APP_NAME, "Saved test data");
         

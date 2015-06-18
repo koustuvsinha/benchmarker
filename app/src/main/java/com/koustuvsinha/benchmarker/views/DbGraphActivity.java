@@ -186,14 +186,16 @@ public class DbGraphActivity extends AppCompatActivity {
         }
         ArrayList<BarDataSet> dataSets = new ArrayList<BarDataSet>();
         Iterator it = dbList.iterator();
+        int count = 0;
         while(it.hasNext()) {
             DbFactoryModel factoryModel = (DbFactoryModel)it.next();
             BarDataSet barDataSet = new BarDataSet(
-                    yVals.get(factoryModel.getDbType()),
+                    yVals.get(count),
                     factoryModel.getDbName());
             barDataSet.setBarSpacePercent(35f);
             barDataSet.setColor(getResources().getColor(factoryModel.getChartColor()));
             dataSets.add(barDataSet);
+            count++;
         }
 
 
