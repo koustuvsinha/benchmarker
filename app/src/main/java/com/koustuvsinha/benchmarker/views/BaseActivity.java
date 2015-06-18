@@ -14,12 +14,12 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.crashlytics.android.Crashlytics;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.koustuvsinha.benchmarker.R;
 import com.koustuvsinha.benchmarker.adaptors.DbListAdaptor;
 import com.koustuvsinha.benchmarker.listeners.DbItemClickListener;
 import com.koustuvsinha.benchmarker.utils.Constants;
 import com.koustuvsinha.benchmarker.utils.DividerItemDecoration;
-import com.melnykov.fab.FloatingActionButton;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -49,7 +49,7 @@ public class BaseActivity extends AppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.listview);
         mRecyclerView.setHasFixedSize(true);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.attachToRecyclerView(mRecyclerView);
+        /*fab.attachToRecyclerView(mRecyclerView);*/
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new DbListAdaptor();
@@ -64,7 +64,7 @@ public class BaseActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, final int position) {
 
-                        if(position == Constants.DB_TYPE_DEFAULT || position == Constants.DB_TYPE_REALM || position == Constants.DB_TYPE_SNAPPY) {
+                        if (position == Constants.DB_TYPE_DEFAULT || position == Constants.DB_TYPE_REALM || position == Constants.DB_TYPE_SNAPPY) {
 
                             new MaterialDialog.Builder(mContext)
                                     .title("Select Test Limit")
