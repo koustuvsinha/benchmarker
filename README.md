@@ -14,6 +14,7 @@ Test and publish a detailed performance report on various databases and ORM's su
 - [x] [Android SQLite](http://developer.android.com/training/basics/data-storage/databases.html)
 - [x] [Realm](http://realm.io)
 - [x] [SnappyDB](https://github.com/nhachicha/SnappyDB)
+- [ ] [Couchbase Lite](http://developer.couchbase.com/mobile/index.html)
 
 ### ORM's *(based on SQLite)*
 - [ ] [GreenDAO](http://greendao-orm.com)
