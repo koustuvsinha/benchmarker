@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -47,7 +48,14 @@ public class DbGraphActivity extends AppCompatActivity {
     private List<List<BarEntry>> yVals;
     private int reportTestType;
     private List<DbFactoryModel> dbList;
-    private RadioButton defaultChoice;
+    private RadioButton testLimit1;
+    private RadioButton testLimit2;
+    private RadioButton testLimit3;
+    private FloatingActionButton insertBtn;
+    private FloatingActionButton readBtn;
+    private FloatingActionButton updateBtn;
+    private FloatingActionButton deleteBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +69,82 @@ public class DbGraphActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Performance Analysis");
         getSupportActionBar().setSubtitle("Comparision between db performance");
 
+        graphHeader = (TextView)findViewById(R.id.graphHeader);
+
+        insertBtn = (FloatingActionButton)findViewById(R.id.insertFabBtn);
+        readBtn = (FloatingActionButton)findViewById(R.id.readFabBtn);
+        updateBtn = (FloatingActionButton)findViewById(R.id.updateFabBtn);
+        deleteBtn = (FloatingActionButton)findViewById(R.id.deleteFabBtn);
+
+        testLimit1 = (RadioButton)findViewById(R.id.rowsGroup1);
+        testLimit2 = (RadioButton)findViewById(R.id.rowsGroup2);
+        testLimit3 = (RadioButton)findViewById(R.id.rowsGroup3);
+
+        testLimit1.setChecked(true);
+
+        initChart();
+
+        displayResultsByType(Constants.DB_TEST_TYPE_INSERT);
+
+        graphHeader.setText("Comparision - Insert");
+
+        insertBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayResultsByType(Constants.DB_TEST_TYPE_INSERT);
+                graphHeader.setText("Comparision - Insert");
+            }
+        });
+
+        readBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayResultsByType(Constants.DB_TEST_TYPE_READ);
+                graphHeader.setText("Comparision - Read");
+            }
+        });
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayResultsByType(Constants.DB_TEST_TYPE_UPDATE);
+                graphHeader.setText("Comparision - Update");
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayResultsByType(Constants.DB_TEST_TYPE_DELETE);
+                graphHeader.setText("Comparision - Delete");
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_graph, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initChart() {
         barChart = (BarChart)findViewById(R.id.chart);
         barChart.setBorderColor(getResources().getColor(R.color.primary_dark));
         barChart.setDrawBarShadow(false);
@@ -85,50 +169,10 @@ public class DbGraphActivity extends AppCompatActivity {
         yr.setDrawAxisLine(true);
         yr.setDrawGridLines(false);
 
-        reportTestType = Constants.DB_TEST_TYPE_INSERT;
-        getSavedData(Constants.TEST_LIMIT_VAL[0]);
-        setTestTimes();
-
-        try {
-            renderData();
-        } catch (ResultDataNotFoundException e) {
-            new AlertProvider(mContext)
-                    .displayErrorMessage("Sorry! No saved result data found!");
-        }
-
         Legend l = barChart.getLegend();
         l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
         l.setFormSize(8f);
         l.setXEntrySpace(4f);
-
-        graphHeader = (TextView)findViewById(R.id.graphHeader);
-        graphHeader.setText("Comparision - Insert");
-
-        defaultChoice = (RadioButton)findViewById(R.id.rowsGroup1);
-        defaultChoice.setChecked(true);
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_graph, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void getSavedData(int numRows) {
@@ -241,6 +285,33 @@ public class DbGraphActivity extends AppCompatActivity {
                 break;
         }
 
+        setTestTimes();
+
+        try {
+            renderData();
+        } catch (ResultDataNotFoundException e) {
+            new AlertProvider(mContext)
+                    .displayErrorMessage("Sorry! No saved result data found!");
+        }
+    }
+
+    private void displayResultsByType(int testType) {
+        reportTestType = testType;
+
+        int checkedLimit = 0;
+        if(testLimit1.isChecked()) {
+            checkedLimit = 0;
+        }
+        if(testLimit2.isChecked()) {
+            checkedLimit = 1;
+        }
+        if(testLimit3.isChecked()) {
+            checkedLimit = 2;
+        }
+
+        Log.i(Constants.APP_NAME,"" + checkedLimit);
+
+        getSavedData(Constants.TEST_LIMIT_VAL[checkedLimit]);
         setTestTimes();
 
         try {
