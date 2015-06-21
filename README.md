@@ -33,7 +33,7 @@ Test and publish a detailed performance report on various databases and ORM's su
 
 ## Contributing
 Being a newcomer into the Android World, contributions of any form are wholeheartedly welcome!
-Read the [Contibuting Guidelines](DEVELOPMENT.md#contribution-guidelines) and if you are a first time Android Developer read the [Tools to download](DEVELOPMENT.md#tools-to-download)
+Read the [Contributing Guidelines](DEVELOPMENT.md#contribution-guidelines) and if you are a first time Android Developer read the [Tools to download](DEVELOPMENT.md#tools-to-download)
 
 ## License
 [MIT](LICENSE.md)
