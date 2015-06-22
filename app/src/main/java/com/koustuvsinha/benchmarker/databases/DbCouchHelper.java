@@ -114,10 +114,10 @@ public class DbCouchHelper implements DbTestInterface {
 
             Document retrieveDoc = database.getExistingDocument(docId);
             Map<String, Object> record = new HashMap<>();
+            Map<String, Object> retrievedRecords = retrieveDoc.getProperties();
             //record.putAll(retrieveDoc.getProperties());
-            Log.i(Constants.APP_NAME, "_rev : " + retrieveDoc.getProperty("_rev"));
-            record.put("_rev", retrieveDoc.getProperty("_rev"));
-            Iterator<Map.Entry<String, Object>> it = record.entrySet().iterator();
+
+            Iterator<Map.Entry<String, Object>> it = retrievedRecords.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<String, Object> rec = it.next();
                 String key = rec.getKey();
@@ -126,9 +126,15 @@ public class DbCouchHelper implements DbTestInterface {
                 recordModel.setName("na");
                 recordModel.setAge(0);
 
-                record.put(key, recordModel);
+                if(key!="_rev"||key!="_id") {
+                    record.put(key, recordModel);
+                }
+
             }
 
+            Log.i(Constants.APP_NAME, "_rev : " + record.containsKey("_rev"));
+            record.put("_rev", retrieveDoc.getProperty("_rev"));
+            record.put("_id",retrieveDoc.getProperty("_id"));
             retrieveDoc.putProperties(record);
 
         } catch(Exception e) {
