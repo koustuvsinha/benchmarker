@@ -20,7 +20,8 @@
     <color name="db_sugar_orm">#E91E63</color>
     <color name="db_green_dao">#388E3C</color>
     <color name="db_active_android">#9C27B0</color>
-    <color name="db_dbflow">#FF5722</color>
+    <color name="db_couchbase">#FF5722</color>
+    <color name="db_dbflow">#5D4037</color>
     <color name="white">#FFFFFF</color>
     <color name="black_semi_transparent">#B2000000</color>
 

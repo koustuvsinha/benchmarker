@@ -64,7 +64,7 @@ public class BaseActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, final int position) {
 
-                        if (position == Constants.DB_TYPE_DEFAULT || position == Constants.DB_TYPE_REALM || position == Constants.DB_TYPE_SNAPPY) {
+                        if (Constants.DB_LIST.get(position).isTestPrepared()) {
 
                             new MaterialDialog.Builder(mContext)
                                     .title("Select Test Limit")

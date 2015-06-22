@@ -3,18 +3,24 @@ package com.koustuvsinha.benchmarker.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
-
 /**
- * Created by koustuv on 27/5/15.
+ * Created by koustuv on 22/6/15.
  */
 
-public class DbTestRecordModel {
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DbCouchRecordModel {
     private long id;
+
+    @JsonProperty(value = "name")
     private String name;
+
+    @JsonProperty(value = "address")
     private String address;
+
+    @JsonProperty(value = "age")
     private int age;
+
+    @JsonProperty(value = "_id")
     private String newId;
 
     public long getId() {

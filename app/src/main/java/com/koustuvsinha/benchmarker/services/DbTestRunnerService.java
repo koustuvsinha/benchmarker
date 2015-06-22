@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.koustuvsinha.benchmarker.R;
+import com.koustuvsinha.benchmarker.databases.DbCouchHelper;
 import com.koustuvsinha.benchmarker.databases.DbRealmHelper;
 import com.koustuvsinha.benchmarker.databases.DbSQLiteHelper;
 import com.koustuvsinha.benchmarker.databases.DbSnappyHelper;
@@ -156,6 +157,9 @@ public class DbTestRunnerService extends IntentService {
                 break;
             case Constants.DB_TYPE_SNAPPY :
                 dbTestInterface = new DbSnappyHelper(appContext);
+                break;
+            case Constants.DB_TYPE_COUCHBASE :
+                dbTestInterface = new DbCouchHelper(appContext);
                 break;
         }
 

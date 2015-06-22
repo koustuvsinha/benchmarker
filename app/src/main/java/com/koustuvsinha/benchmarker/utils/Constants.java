@@ -15,21 +15,23 @@ public class Constants {
     public final static int DB_TYPE_DEFAULT = 0;
     public final static int DB_TYPE_REALM = 1;
     public final static int DB_TYPE_SNAPPY = 2;
-    public final static int DB_TYPE_ORMLITE = 3;
-    public final static int DB_TYPE_SUGARORM = 4;
-    public final static int DB_TYPE_GREENDAO = 5;
-    public final static int DB_TYPE_ACTIVEANDROID = 6;
-    public final static int DB_TYPE_DBFLOW = 7;
+    public final static int DB_TYPE_COUCHBASE = 3;
+    public final static int DB_TYPE_ORMLITE = 4;
+    public final static int DB_TYPE_SUGARORM = 5;
+    public final static int DB_TYPE_GREENDAO = 6;
+    public final static int DB_TYPE_ACTIVEANDROID = 7;
+    public final static int DB_TYPE_DBFLOW = 8;
 
     public final static ArrayList<DbFactoryModel> DB_LIST = new ArrayList<DbFactoryModel>() {{
-        add(new DbFactoryModel(DB_TYPE_DEFAULT,"Android SQLite","v1.0","Android",true, R.color.db_android_sqlite));
-        add(new DbFactoryModel(DB_TYPE_REALM,"Realm","v0.83.3","Realm",true,R.color.db_realm));
-        add(new DbFactoryModel(DB_TYPE_SNAPPY,"SnappyDB","v0.1.0","nhachicha",true,R.color.db_snappy));
-        add(new DbFactoryModel(DB_TYPE_ORMLITE,"ORM Lite Android","v4.48","ORM Lite",true,R.color.db_orm_lite));
-        add(new DbFactoryModel(DB_TYPE_SUGARORM,"Sugar ORM","v1.4","Satya Narayan",true,R.color.db_sugar_orm));
-        add(new DbFactoryModel(DB_TYPE_GREENDAO,"Green DAO","v1.3","Green DAO",true,R.color.db_green_dao));
-        add(new DbFactoryModel(DB_TYPE_ACTIVEANDROID,"Active Android","v3.0","Michael Pardo",true,R.color.db_active_android));
-        add(new DbFactoryModel(DB_TYPE_DBFLOW,"DBFlow","v2.0.0","Raizlabs",true,R.color.db_dbflow));
+        add(new DbFactoryModel(DB_TYPE_DEFAULT,"Android SQLite","v1.0","Android",true, R.color.db_android_sqlite,true));
+        add(new DbFactoryModel(DB_TYPE_REALM,"Realm","v0.83.3","Realm",true,R.color.db_realm,true));
+        add(new DbFactoryModel(DB_TYPE_SNAPPY,"SnappyDB","v0.1.0","nhachicha",true,R.color.db_snappy,true));
+        add(new DbFactoryModel(DB_TYPE_COUCHBASE,"Couchbase Lite","v1.1.0","Couchbase Inc",true,R.color.db_couchbase,true));
+        add(new DbFactoryModel(DB_TYPE_ORMLITE,"ORM Lite Android","v4.48","ORM Lite",true,R.color.db_orm_lite,false));
+        add(new DbFactoryModel(DB_TYPE_SUGARORM,"Sugar ORM","v1.4","Satya Narayan",true,R.color.db_sugar_orm,false));
+        add(new DbFactoryModel(DB_TYPE_GREENDAO,"Green DAO","v1.3","Green DAO",true,R.color.db_green_dao,false));
+        add(new DbFactoryModel(DB_TYPE_ACTIVEANDROID,"Active Android","v3.0","Michael Pardo",true,R.color.db_active_android,false));
+        add(new DbFactoryModel(DB_TYPE_DBFLOW,"DBFlow","v2.0.0","Raizlabs",true,R.color.db_dbflow,false));
     }};
 
     public final static String DB_TYPE = "dbType";
