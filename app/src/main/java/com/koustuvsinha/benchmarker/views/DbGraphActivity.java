@@ -198,12 +198,9 @@ public class DbGraphActivity extends AppCompatActivity {
     private void prepareChartColumnNames() {
         xVals = new ArrayList<String>();
         if(dbList!=null) {
-            Iterator it = dbList.iterator();
-            int count = 0;
-            while (it.hasNext()) {
-                count++;
+            int count = dbList.size();
+            for(int i=0;i<count;i=i+2) {
                 xVals.add("");
-                it.next();
             }
         }
 
