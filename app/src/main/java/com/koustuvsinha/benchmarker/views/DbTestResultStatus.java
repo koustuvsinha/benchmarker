@@ -1,10 +1,12 @@
 package com.koustuvsinha.benchmarker.views;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,12 @@ import com.koustuvsinha.benchmarker.utils.BusProvider;
 import com.koustuvsinha.benchmarker.utils.Constants;
 import com.squareup.otto.Subscribe;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class DbTestResultStatus extends Fragment {
 
@@ -31,6 +39,8 @@ public class DbTestResultStatus extends Fragment {
     private TextView testDbName;
     private TextView testDbNumRecords;
     private ArcProgress arcProgress;
+    private ArcProgress memoryUsage;
+    private ArcProgress cpuUsage;
     private ImageView insertStatusImg;
     private ImageView readStatusImg;
     private ImageView deleteStatusImg;
@@ -40,6 +50,8 @@ public class DbTestResultStatus extends Fragment {
     private TextView updateResult;
     private TextView deleteResult;
     private Drawable checkMark;
+    private Timer timer;
+    private Handler timerHandler;
 
 
     public static DbTestResultStatus newInstance(int dbType,int numRecords) {
@@ -70,8 +82,8 @@ public class DbTestResultStatus extends Fragment {
             numRecords = args.getInt(Constants.DB_NUM_RECORDS);
         }
 
-        Log.i(Constants.APP_NAME,"-------------> " + dbType);
-
+        timer = new Timer();
+        timerHandler = new Handler();
     }
 
     @Override
@@ -85,6 +97,8 @@ public class DbTestResultStatus extends Fragment {
         testDbNumRecords = (TextView)v.findViewById(R.id.testDbNumRecords);
 
         arcProgress = (ArcProgress)v.findViewById(R.id.arc_progress);
+        memoryUsage = (ArcProgress)v.findViewById(R.id.arc_memory);
+        cpuUsage = (ArcProgress)v.findViewById(R.id.arc_cpu);
 
         insertStatusImg = (ImageView)v.findViewById(R.id.insertStatusImg);
         readStatusImg = (ImageView)v.findViewById(R.id.readStatusImg);
@@ -105,7 +119,27 @@ public class DbTestResultStatus extends Fragment {
         //initialize values
         testDbName.setText(Constants.DB_LIST.get(dbType).getDbName());
         testDbNumRecords.setText(numRecords + " Records");
+
         arcProgress.setProgress(0);
+        memoryUsage.setProgress(0);
+        cpuUsage.setProgress(0);
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                timerHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        memoryUsage.setProgress(getMemoryUsage());
+                        try {
+                            cpuUsage.setProgress(Math.round(getUsageCPU() * 100));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }, 0, 1000);
 
         return v;
     }
@@ -126,12 +160,19 @@ public class DbTestResultStatus extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        timer.cancel();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     /**
@@ -183,6 +224,49 @@ public class DbTestResultStatus extends Fragment {
 
     private String calculatePerf(String perf) {
         return String.format("%.2f",((double)numRecords / Integer.parseInt(perf))*1000);
+    }
+
+    private int getMemoryUsage() {
+        ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+        ActivityManager activityManager = (ActivityManager) getActivity().getSystemService(Activity.ACTIVITY_SERVICE);
+        activityManager.getMemoryInfo(mi);
+        long memoryAvailable = mi.availMem / 1048576L;
+        long totalMemory = mi.totalMem / 1048576L;
+        return Math.round(((float)(totalMemory - memoryAvailable) / totalMemory)*100);
+    }
+
+    private float getUsageCPU() throws IOException {
+        try {
+            RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
+            String load = reader.readLine();
+
+            String[] toks = load.split(" +");  // Split on one or more spaces
+
+            long idle1 = Long.parseLong(toks[4]);
+            long cpu1 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[5])
+                    + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+            try {
+                Thread.sleep(360);
+            } catch (Exception e) {}
+
+            reader.seek(0);
+            load = reader.readLine();
+            reader.close();
+
+            toks = load.split(" +");
+
+            long idle2 = Long.parseLong(toks[4]);
+            long cpu2 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[5])
+                    + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+            return (float)(cpu2 - cpu1) / ((cpu2 + idle2) - (cpu1 + idle1));
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return 0;
     }
 
 }
