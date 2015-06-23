@@ -7,9 +7,10 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
 import com.couchbase.lite.Manager;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
 import com.couchbase.lite.android.AndroidContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.koustuvsinha.benchmarker.models.DbCouchRecordModel;
 import com.koustuvsinha.benchmarker.models.DbTestRecordModel;
 import com.koustuvsinha.benchmarker.utils.AlertProvider;
 import com.koustuvsinha.benchmarker.utils.Constants;
@@ -17,8 +18,6 @@ import com.koustuvsinha.benchmarker.utils.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +30,7 @@ public class DbCouchHelper implements DbTestInterface {
     private Context mContext;
     private Manager manager;
     private Database database;
-    private String docId;
+    private List<DbTestRecordModel> cachedData;
 
     private final String DB_NAME = "couchtestdb";
 
@@ -59,28 +58,26 @@ public class DbCouchHelper implements DbTestInterface {
         String KEY_HEADER = "couchHeader";
         Iterator it = modelList.iterator();
         int count = 0;
-        Document document = database.createDocument();
-        Map<String,Object> record = new HashMap<>();
 
         while(it.hasNext()) {
+            Document document = database.createDocument();
+            Map<String,Object> record = new HashMap<>();
+
             String KEY = KEY_HEADER + count;
             count++;
+
             DbTestRecordModel recordModel = (DbTestRecordModel)it.next();
-            DbCouchRecordModel couchRecordModel = new DbCouchRecordModel();
 
-            couchRecordModel.setNewId(KEY);
-            couchRecordModel.setName(recordModel.getName());
-            couchRecordModel.setAge(recordModel.getAge());
-            couchRecordModel.setAddress(recordModel.getAddress());
+            record.put("name",recordModel.getName());
+            record.put("address",recordModel.getAddress());
+            record.put("age",recordModel.getAge());
+            record.put("stringId",KEY);
 
-            record.put(KEY,couchRecordModel);
-        }
-
-        try {
-            document.putProperties(record);
-            docId = document.getId();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
+            try {
+                document.putProperties(record);
+            } catch (CouchbaseLiteException e) {
+                e.printStackTrace();
+            }
         }
 
         closeDb();
@@ -90,17 +87,27 @@ public class DbCouchHelper implements DbTestInterface {
     public void getData() {
         openDb();
 
-        Document retrieveDoc = database.getExistingDocument(docId);
-
-        Map<String ,Object> record = retrieveDoc.getProperties();
-        Iterator<Map.Entry<String,Object>> it = record.entrySet().iterator();
         ArrayList<DbTestRecordModel> modelList = new ArrayList<>();
+        Query query = database.createAllDocumentsQuery();
+        query.setAllDocsMode(Query.AllDocsMode.ALL_DOCS);
 
-        while(it.hasNext()) {
-            Map.Entry<String,Object> rec = it.next();
-            Log.i(Constants.APP_NAME, rec.getKey());
-            //modelList.add((DbTestRecordModel) rec.getValue());
+        try {
+            QueryEnumerator result = query.run();
+            for(Iterator<QueryRow> it = result; it.hasNext();) {
+                QueryRow row = it.next();
+                Document record = database.getDocument(row.getDocumentId());
+                DbTestRecordModel recordModel = new DbTestRecordModel();
+                recordModel.setNewId(record.getId());
+                recordModel.setName((String) record.getProperty("name"));
+                recordModel.setAge(21);
+                recordModel.setAddress((String) record.getProperty("address"));
+                modelList.add(recordModel);
+            }
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
         }
+
+        cachedData = modelList;
 
         closeDb();
     }
@@ -110,49 +117,40 @@ public class DbCouchHelper implements DbTestInterface {
 
         openDb();
 
-        try {
-
-            Document retrieveDoc = database.getExistingDocument(docId);
-            Map<String, Object> record = new HashMap<>();
-            Map<String, Object> retrievedRecords = retrieveDoc.getProperties();
-            //record.putAll(retrieveDoc.getProperties());
-
-            Iterator<Map.Entry<String, Object>> it = retrievedRecords.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, Object> rec = it.next();
-                String key = rec.getKey();
-                DbCouchRecordModel recordModel = new DbCouchRecordModel();
-                recordModel.setAddress("na");
-                recordModel.setName("na");
-                recordModel.setAge(0);
-
-                if(key!="_rev"||key!="_id") {
-                    record.put(key, recordModel);
-                }
-
+        Iterator it = cachedData.iterator();
+        while(it.hasNext()) {
+            DbTestRecordModel recordModel = (DbTestRecordModel)it.next();
+            Document record = database.getDocument(recordModel.getNewId());
+            Map<String, Object> properties = new HashMap<>();
+            properties.putAll(record.getProperties());
+            properties.put("name", "na");
+            properties.put("age", 0);
+            properties.put("address", "na");
+            try {
+                record.putProperties(properties);
+            } catch (CouchbaseLiteException e) {
+                e.printStackTrace();
             }
-
-            Log.i(Constants.APP_NAME, "_rev : " + record.containsKey("_rev"));
-            record.put("_rev", retrieveDoc.getProperty("_rev"));
-            record.put("_id",retrieveDoc.getProperty("_id"));
-            retrieveDoc.putProperties(record);
-
-        } catch(Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeDb();
         }
+
+        closeDb();
     }
 
     @Override
     public void deleteAllData() {
         openDb();
-        Document retrievedDoc = database.getDocument(docId);
-        try {
-            retrievedDoc.delete();
-        } catch(CouchbaseLiteException e) {
-            Log.e(Constants.APP_NAME,"Error in deleting doc");
+
+        Iterator it = cachedData.iterator();
+        while(it.hasNext()) {
+            DbTestRecordModel recordModel = (DbTestRecordModel)it.next();
+            Document record = database.getDocument(recordModel.getNewId());
+            try {
+                record.delete();
+            } catch (CouchbaseLiteException e) {
+                e.printStackTrace();
+            }
         }
+
         closeDb();
     }
 
