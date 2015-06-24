@@ -33,6 +33,9 @@ Test and publish a detailed performance report on various databases and ORM's su
 * Publish in Google Play
 * Real Time performance updates
 
+## Results
+You can find the initial benchmarking results in [here](RESULTS.md)
+
 ## Contributing
 Being a newcomer into the Android World, contributions of any form are wholeheartedly welcome!
 Read the [Contributing Guidelines](DEVELOPMENT.md#contribution-guidelines) and if you are a first time Android Developer read the [Tools to download](DEVELOPMENT.md#tools-to-download)
