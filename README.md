@@ -26,7 +26,7 @@ Test and publish a detailed performance report on various databases and ORM's su
 
 *Checkmarks indicate test cases updated till now*
 
-**NB** : My main motivation was to test out the performance of sqlite in comparision with several new and upcoming nosql databases. If you could help me out setting up the various ORM tests, view this [issue](https://github.com/koustuvsinha/benchmarker/issues/18)
+**NB** : My main motivation was to test out the performance of sqlite in comparision with several new and upcoming nosql databases. If you would like to help me out setting up the various ORM tests, view this [issue](https://github.com/koustuvsinha/benchmarker/issues/18)
 
 ## Further Planning
 * Display detailed performance test report on separate webpage
