@@ -1,5 +1,5 @@
 # Benchmarker
-Android Application to Benchmark Android-running databases
+Why rely on others benchmarking reports when you can test it out in your own device? Welcome to Benchmarker, your one stop app for micro-benchmarking databases and comparing performance statistics on the go, so that you can make a well-informed decision in your next superhit app.
 
 ## Motivation
 Test and publish a detailed performance report on various databases and ORM's supported on the Android Platform such that developers can make an informed choice
@@ -25,6 +25,8 @@ Test and publish a detailed performance report on various databases and ORM's su
 
 
 *Checkmarks indicate test cases updated till now*
+
+**NB** : My main motivation was to test out the performance of sqlite in comparision with several new and upcoming nosql databases. If you could help me out setting up the various ORM tests, view this [issue](https://github.com/koustuvsinha/benchmarker/issues/18)
 
 ## Further Planning
 * Display detailed performance test report on separate webpage
