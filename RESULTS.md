@@ -17,10 +17,10 @@ This an initial comparision results and notes based on my preliminary findings. 
 
 | No. of test rows | Type | Comparision |
 | :--- | :--- | :--- |
-| 1,000 | Insert | |
-|  | Read | |
-|  | Update | |
-|  | Delete | |
+| 1,000 | Insert |<img src="https://cloud.githubusercontent.com/assets/5122822/8336445/476836a6-1ac2-11e5-8b91-7eec1de84672.JPG" width="300" height="450"/> |
+|  | Read |<img src="https://cloud.githubusercontent.com/assets/5122822/8336447/4bef01dc-1ac2-11e5-90ba-a963e9b3e251.JPG" width="300" height="450"/> |
+|  | Update |<img src="https://cloud.githubusercontent.com/assets/5122822/8336450/506c0aac-1ac2-11e5-98ae-2d2484f60612.JPG" width="300" height="450"/> |
+|  | Delete |<img src="https://cloud.githubusercontent.com/assets/5122822/8336451/53214938-1ac2-11e5-84d0-cb402d6a97ad.JPG" width="300" height="450"/> |
 
 ## Notes
 * Till now, I have not yet got a good result in case of Couchbase Lite, as you can see is painfully slow in all respects. Maybe I am doing something wrong; if so please raise an issue.
