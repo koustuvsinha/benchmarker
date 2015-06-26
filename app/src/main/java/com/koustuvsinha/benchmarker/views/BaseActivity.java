@@ -86,7 +86,7 @@ public class BaseActivity extends AppCompatActivity {
                                     .show();
                         } else {
 
-                            Toast.makeText(getApplicationContext(), "Tests are not yet ready!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Tests are coming soon!", Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -109,6 +109,14 @@ public class BaseActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_base, menu);
         return true;
+    }
+
+    public void displayAbout(MenuItem item) {
+        new MaterialDialog.Builder(mContext)
+                .title("About")
+                .customView(R.layout.about,true)
+                .positiveText("OK")
+                .show();
     }
 
     @Override
