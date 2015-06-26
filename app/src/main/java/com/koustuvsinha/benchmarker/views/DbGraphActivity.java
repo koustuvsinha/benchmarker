@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -55,6 +56,7 @@ public class DbGraphActivity extends AppCompatActivity {
     private FloatingActionButton readBtn;
     private FloatingActionButton updateBtn;
     private FloatingActionButton deleteBtn;
+    private FloatingActionsMenu menuFabBtn;
 
 
     @Override
@@ -75,6 +77,7 @@ public class DbGraphActivity extends AppCompatActivity {
         readBtn = (FloatingActionButton)findViewById(R.id.readFabBtn);
         updateBtn = (FloatingActionButton)findViewById(R.id.updateFabBtn);
         deleteBtn = (FloatingActionButton)findViewById(R.id.deleteFabBtn);
+        menuFabBtn = (FloatingActionsMenu)findViewById(R.id.menuFabBtn);
 
         testLimit1 = (RadioButton)findViewById(R.id.rowsGroup1);
         testLimit2 = (RadioButton)findViewById(R.id.rowsGroup2);
@@ -93,6 +96,7 @@ public class DbGraphActivity extends AppCompatActivity {
             public void onClick(View view) {
                 displayResultsByType(Constants.DB_TEST_TYPE_INSERT);
                 graphHeader.setText("Comparision - Insert");
+                menuFabBtn.collapse();
             }
         });
 
@@ -101,6 +105,7 @@ public class DbGraphActivity extends AppCompatActivity {
             public void onClick(View view) {
                 displayResultsByType(Constants.DB_TEST_TYPE_READ);
                 graphHeader.setText("Comparision - Read");
+                menuFabBtn.collapse();
             }
         });
 
@@ -109,6 +114,7 @@ public class DbGraphActivity extends AppCompatActivity {
             public void onClick(View view) {
                 displayResultsByType(Constants.DB_TEST_TYPE_UPDATE);
                 graphHeader.setText("Comparision - Update");
+                menuFabBtn.collapse();
             }
         });
 
@@ -117,6 +123,7 @@ public class DbGraphActivity extends AppCompatActivity {
             public void onClick(View view) {
                 displayResultsByType(Constants.DB_TEST_TYPE_DELETE);
                 graphHeader.setText("Comparision - Delete");
+                menuFabBtn.collapse();
             }
         });
 
