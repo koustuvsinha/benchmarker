@@ -36,6 +36,7 @@ public class DbTestingActivity extends AppCompatActivity implements DbTestResult
     private int dbType;
     private int numPercent;
     private Toolbar mToolbar;
+    private Intent testingIntent;
 
 
     @Override
@@ -85,12 +86,14 @@ public class DbTestingActivity extends AppCompatActivity implements DbTestResult
     }
 
     public void onStartTesting() {
-        Intent i = new Intent(this, DbTestRunnerService.class);
-        Log.i(Constants.APP_NAME, "Received numRecords = " + numRecords);
-        i.putExtra(Constants.DB_NUM_RECORDS,numRecords);
-        i.putExtra(Constants.DB_TYPE,dbType);
-        Log.i(Constants.APP_NAME, "Starting Service Intent..");
-        startService(i);
+        if(testingIntent==null) {
+            testingIntent = new Intent(this, DbTestRunnerService.class);
+            Log.i(Constants.APP_NAME, "Received numRecords = " + numRecords);
+            testingIntent.putExtra(Constants.DB_NUM_RECORDS, numRecords);
+            testingIntent.putExtra(Constants.DB_TYPE, dbType);
+            Log.i(Constants.APP_NAME, "Starting Service Intent..");
+            startService(testingIntent);
+        }
     }
 
 

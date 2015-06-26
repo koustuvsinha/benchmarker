@@ -81,9 +81,6 @@ public class DbTestResultStatus extends Fragment {
             dbType = args.getInt(Constants.DB_TYPE);
             numRecords = args.getInt(Constants.DB_NUM_RECORDS);
         }
-
-        timer = new Timer();
-        timerHandler = new Handler();
     }
 
     @Override
@@ -124,6 +121,18 @@ public class DbTestResultStatus extends Fragment {
         memoryUsage.setProgress(0);
         cpuUsage.setProgress(0);
 
+
+
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        timer = new Timer();
+        timerHandler = new Handler();
+
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -140,8 +149,6 @@ public class DbTestResultStatus extends Fragment {
                 });
             }
         }, 0, 1000);
-
-        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -168,6 +175,13 @@ public class DbTestResultStatus extends Fragment {
         super.onDetach();
         mListener = null;
         timer.cancel();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        timer.cancel();
+        Log.i(Constants.APP_NAME,"Timer paused onPause");
     }
 
     @Override
