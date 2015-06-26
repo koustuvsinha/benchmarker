@@ -85,7 +85,8 @@
                         app:arc_progress="45"
                         app:arc_bottom_text="STATUS"
                         app:arc_unfinished_color="#FFFFFF"
-                        app:arc_finished_color="#3F51B5"
+                        app:arc_finished_color="@color/primary_dark"
+                        app:arc_text_color="@color/primary"
                         />
 
                 </LinearLayout>
@@ -306,7 +307,8 @@
                         app:arc_progress="45"
                         app:arc_bottom_text="MEMORY"
                         app:arc_unfinished_color="#FFFFFF"
-                        app:arc_finished_color="#3F51B5"
+                        app:arc_finished_color="@color/primary_dark"
+                        app:arc_text_color="@color/primary"
                         />
                 </LinearLayout>
 
@@ -336,7 +338,8 @@
                         app:arc_progress="45"
                         app:arc_bottom_text="CPU"
                         app:arc_unfinished_color="#FFFFFF"
-                        app:arc_finished_color="#3F51B5"
+                        app:arc_finished_color="@color/primary_dark"
+                        app:arc_text_color="@color/primary"
                         />
                 </LinearLayout>
 
