@@ -9,4 +9,4 @@
 **/*.iml
 **/*.log
 .idea/
-
+app/app-release.apk
