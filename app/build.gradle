@@ -18,6 +18,7 @@ repositories {
     maven { url "https://raw.github.com/Raizlabs/maven-releases/master/releases" }
     maven { url "https://jitpack.io" }
     maven { url "http://files.couchbase.com/maven2/" }
+    maven { url 'http://dl.bintray.com/amulyakhare/maven' }
 }
 
 
@@ -82,4 +83,5 @@ dependencies {
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
     compile 'com.couchbase.lite:couchbase-lite-android:1.1.0'
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }
