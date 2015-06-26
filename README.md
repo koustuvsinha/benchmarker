@@ -1,4 +1,4 @@
-# Benchmarker
+# Benchmarker <img src="https://cloud.githubusercontent.com/assets/5122822/8385821/b88ae08e-1c68-11e5-871f-5dafca6d4b26.png" height="60" width="60"/>
 Why rely on others benchmarking reports when you can test it out in your own device? Welcome to Benchmarker, your one stop app for micro-benchmarking databases and comparing performance statistics on the go, so that you can make a well-informed decision in your next superhit app.
 
 ## Motivation
