@@ -39,3 +39,17 @@ The following useful resources I consult for development :
 * [Curated List of Awesome UI Libraries](https://github.com/wasabeef/awesome-android-ui)
 * [Material Pallette](http://www.materialpalette.com/)
 * [Android Launcher Icon generator](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html)
+
+## Dependencies
+The following are the list of dependencies of this application (which you will also find listed in [build.gradle](app/build.gradle) file)
+* [Crashlytics](https://fabric.io) - Automatic crash reporting toolkit
+* [FutureSimple's Floating Action Button](https://github.com/futuresimple/android-floating-action-button) - great library to render android Material Floating Action buttons
+* [Andy Gibson's DataFactory](https://github.com/andygibson/datafactory) - Java library to generate fake data
+* [Wasabeef's RecyclerView Animator](https://github.com/wasabeef/recyclerview-animators) - Generate RecyclerView custom animations
+* [Material Dialogs](https://github.com/afollestad/material-dialogs) - a beautiful customizable Material design dialog generator
+* [SquareUp Otto](http://square.github.io/otto/) - High performance Android event bus
+* [CircleProgess](https://github.com/lzyzsd/CircleProgress) - CleanerMaster style Circle Progress library
+* [PhilJay's MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) - amazingly powerful and customizable Android Chart Library
+* [AmulyaKhare's TextDrawable](https://github.com/amulyakhare/TextDrawable) - Gmail Style Letter Images generator library
+
+Huge thanks to the devs for providing such high quality free software :)
