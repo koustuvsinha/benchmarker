@@ -40,5 +40,8 @@ You can find the initial benchmarking results in [here](RESULTS.md)
 Being a newcomer into the Android World, contributions of any form are wholeheartedly welcome!
 Read the [Contributing Guidelines](DEVELOPMENT.md#contribution-guidelines) and if you are a first time Android Developer read the [Tools to download](DEVELOPMENT.md#tools-to-download)
 
+## Credits
+Thanks to the projects mentioned in the [dependencies](DEVELOPMENT.md#dependencies) section for providing such amazing libraries to work with!
+
 ## License
 [MIT](LICENSE.md)
