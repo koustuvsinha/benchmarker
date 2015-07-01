@@ -1,4 +1,6 @@
 # Benchmarker <img src="https://cloud.githubusercontent.com/assets/5122822/8385821/b88ae08e-1c68-11e5-871f-5dafca6d4b26.png" height="60" width="60"/>
+
+[![Join the chat at https://gitter.im/koustuvsinha/benchmarker](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/koustuvsinha/benchmarker?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Why rely on others benchmarking reports when you can test it out in your own device? Welcome to Benchmarker, your one stop app for micro-benchmarking databases and comparing performance statistics on the go, so that you can make a well-informed decision in your next superhit app.
 
 ## Motivation
